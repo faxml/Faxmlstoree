@@ -1,0 +1,1542 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Faxml Store</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg0:#070913;
+      --bg1:#0b1024;
+      --stroke: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --glow1: rgba(117, 83, 255, .35);
+      --glow2: rgba(0, 255, 200, .18);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1120px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:"Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, var(--glow1), transparent 55%),
+        radial-gradient(900px 600px at 85% 15%, rgba(0, 210, 255, .20), transparent 55%),
+        radial-gradient(800px 600px at 70% 85%, var(--glow2), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+      background-size: 140% 140%, 160% 160%, 150% 150%, 100% 100%;
+      background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%;
+      animation: bgShift 18s ease-in-out infinite;
+    }
+    header, main{ position:relative; z-index:1; }
+    @keyframes bgShift{
+      0%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
+      50%{ background-position: 100% 30%, 0% 60%, 20% 0%, 0% 0%; }
+      100%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    .container{ width:min(var(--max), calc(100% - 40px)); margin:0 auto; }
+
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 14px;
+      transition: .2s ease;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.22);
+    }
+    .btn.primary{
+      border-color: rgba(117,83,255,.45);
+      background: linear-gradient(135deg, rgba(117,83,255,.32), rgba(0,210,255,.18));
+      box-shadow: 0 14px 40px rgba(117,83,255,.18);
+    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none !important; }
+
+    /* NAV */
+    .nav{ position: sticky; top: 14px; z-index: 50; margin-top: 14px; }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 14px; border-radius:999px; min-width:0;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; padding-left:6px; font-weight:900; flex: 1 1 auto; min-width:0; }
+    .brand-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .logo-wrap{
+      width:38px; height:38px; border-radius:12px; overflow:hidden;
+      flex:0 0 auto; border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(117,83,255,.25); background: rgba(255,255,255,.06);
+    }
+    .logo-img{ width:100%; height:100%; display:block; object-fit: cover; }
+
+    .nav-links{ display:flex; gap:8px; align-items:center; justify-content:center; flex:1 1 auto; min-width:0; }
+    .nav-links a{
+      padding:10px 12px; border-radius:999px; color: var(--muted);
+      border:1px solid transparent; transition:.2s ease; font-weight:900; font-size:14px;
+      white-space:nowrap;
+    }
+    .nav-links a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
+
+    .nav-cta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
+
+    .search{
+      display:flex; align-items:center; gap:8px; padding: 8px 10px;
+      border-radius: 999px; border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      width: clamp(160px, 22vw, 280px);
+      max-width: 280px; min-width: 160px; flex: 0 1 auto; min-width:0;
+    }
+    .search input{
+      width:100%; min-width:0; border:0; outline:none; background: transparent;
+      color: var(--text); font: inherit; font-size: 14px;
+    }
+    .search input::placeholder{ color: rgba(255,255,255,.55); }
+    .search .s-clear{
+      border:0; background: transparent; color: rgba(255,255,255,.8);
+      cursor:pointer; padding: 0 6px; display:none; font-weight:900;
+    }
+    .search.has-value .s-clear{ display:block; }
+
+    .hamburger{
+      display:none; width:42px; height:42px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06);
+      align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
+    }
+    .hamburger span{ width:18px; height:2px; background: rgba(255,255,255,.85); position:relative; display:block; border-radius:999px; }
+    .hamburger span::before,.hamburger span::after{
+      content:""; position:absolute; left:0; width:18px; height:2px;
+      background: rgba(255,255,255,.85); border-radius:999px;
+    }
+    .hamburger span::before{ top:-6px; }
+    .hamburger span::after{ top:6px; }
+
+    .mobile{ display:none; margin-top:10px; padding:10px; border-radius: var(--radius2); }
+    .mobile.open{ display:block; }
+    .mobile a{
+      display:block; padding:12px 12px; border-radius:14px; color: var(--muted);
+      font-weight:900; border:1px solid transparent; transition:.2s ease;
+    }
+    .mobile a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
+
+    @media (max-width: 1100px){
+      .nav-links{ display:none; }
+      .nav-cta .btn:not(.primary){ display:none; }
+      .hamburger{ display:flex; }
+    }
+    @media (max-width: 640px){
+      .nav-inner{
+        display:grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "brand cta" "search search";
+        gap:10px;
+        padding:12px;
+        border-radius: var(--radius2);
+      }
+      .brand{ grid-area: brand; }
+      .nav-cta{ grid-area: cta; justify-content:flex-end; }
+      .search{ grid-area: search; width:100%; max-width:none; min-width:0; }
+      .btn{ padding: 9px 12px; font-size:13px; }
+      .hamburger{ width:40px; height:40px; }
+    }
+
+    /* HERO */
+    .hero{ padding:44px 0 26px; }
+    .hero-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch; }
+    .hero-card{ padding:26px; border-radius: var(--radius2); position:relative; overflow:hidden; }
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted); font-weight:900; font-size:13px;
+    }
+    .dot{ width:8px; height:8px; border-radius:999px; background: rgba(0,255,200,.85); box-shadow: 0 0 22px rgba(0,255,200,.35); }
+    h1{ margin:14px 0 10px; font-size: clamp(30px, 4vw, 44px); line-height:1.1; letter-spacing:-0.6px; }
+    .sub{ margin:0 0 18px; color: var(--muted); font-size:16px; line-height:1.6; max-width:62ch; }
+
+    .showcase{ padding:18px; border-radius: var(--radius2); display:flex; flex-direction:column; gap:12px; }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px; padding:7px 10px;
+      border-radius:999px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-weight:900; font-size:12px; width: fit-content;
+    }
+    .mini{ padding:14px; border-radius:18px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
+    .mini h3{ margin:0 0 6px; font-size:14px; }
+    .mini p{ margin:0; color: var(--muted); font-size:13px; line-height:1.5; }
+
+    section{ padding:18px 0 24px; }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:14px; }
+    .section-head h2{ margin:0; font-size:22px; letter-spacing:-.2px; }
+    .section-head p{ margin:6px 0 0; color: var(--muted); max-width:64ch; line-height:1.6; font-size:14px; font-weight:700; }
+
+    /* Produk grid */
+    .grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } .grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      padding:14px; border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      transition:.2s ease; position:relative; overflow:hidden;
+    }
+    .card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+
+    .product-thumb{
+      position:relative; height:150px; border-radius:16px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); margin-bottom:12px;
+    }
+    .product-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+    .product-thumb::after{
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(700px 220px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
+      pointer-events:none; z-index:2;
+    }
+    .thumb-brand{
+      position:absolute; left:14px; bottom:14px; z-index:3;
+      font-weight:900; letter-spacing:.8px; text-transform: uppercase; font-size: 18px;
+      opacity:.95; text-shadow: 0 12px 30px rgba(0,0,0,.55);
+    }
+    .stock-badge{
+      position:absolute; top:12px; right:12px; z-index:4;
+      padding:6px 10px; border-radius:10px; font-size:12px; font-weight:900;
+      color:#fff; border:1px solid rgba(255,255,255,.14);
+      background: rgba(34,197,94,.75); box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .stock-badge.habis{ background: rgba(239,68,68,.78); }
+
+    .tag{
+      display:inline-flex; align-items:center; padding:6px 10px;
+      border-radius:999px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-size:12px; font-weight:900; white-space:nowrap;
+    }
+    .product-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
+    .product-sub{ margin:0 0 8px; color: rgba(255,255,255,.72); font-size:12px; font-weight:900; }
+    .card h3{ margin:8px 0 6px; font-size:16px; letter-spacing:-.2px; }
+    .card p{ margin:0 0 12px; color: var(--muted); font-size:13px; line-height:1.6; }
+
+    .price-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .price{ font-weight:900; letter-spacing:.2px; }
+    .tiny{ color: var(--muted); font-size:12px; margin-left:8px; font-weight:800; }
+
+    .btn-buy{
+      width:100%; margin-top:12px; border-radius:12px; height:40px;
+      font-weight:900;
+    }
+    .btn-buy.primaryish{
+      border-color: rgba(29,107,255,.45);
+      background: linear-gradient(180deg, rgba(29,107,255,.95), rgba(11,92,255,.95));
+      box-shadow: 0 14px 40px rgba(29,107,255,.18);
+    }
+    .btn-buy.out{
+      background: rgba(148,163,184,.18);
+      border-color: rgba(148,163,184,.22);
+      color: rgba(255,255,255,.75);
+    }
+
+    /* =========================
+       SERVICE
+    ========================= */
+    .service-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 980px){ .service-grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px){ .service-grid{ grid-template-columns: 1fr; } }
+
+    .service-card{
+      padding:16px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      transition:.2s ease;
+    }
+    .service-card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+    }
+    .service-top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .service-ico{
+      width:42px; height:42px;
+      border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      font-size:18px;
+    }
+    .service-card h3{ margin:4px 0 8px; font-size:16px; letter-spacing:-.2px; }
+    .service-card p{ margin:0 0 12px; color: var(--muted); font-size:13px; line-height:1.6; }
+    .service-actions{ display:flex; gap:10px; align-items:center; }
+    .service-actions .btn{ border-radius:12px; }
+
+    /* FAQ */
+    .faq{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    details{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding:14px;
+      transition:.2s ease;
+      overflow:hidden;
+    }
+    details:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.18);
+    }
+    summary{
+      cursor:pointer;
+      list-style:none;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      font-weight:900;
+      font-size:14px;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .chev{
+      width:30px; height:30px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      display:inline-flex; align-items:center; justify-content:center;
+      flex:0 0 auto;
+      transition:.2s ease;
+      color: var(--muted);
+      font-weight:900;
+    }
+    details[open] .chev{
+      transform: rotate(45deg);
+      color: var(--text);
+      border-color: rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+    }
+    .answer{
+      margin-top:10px;
+      color: var(--muted);
+      line-height:1.7;
+      font-size:13px;
+      font-weight: 700;
+    }
+
+    /* Footer */
+    /* =========================
+   FOOTER STYLE (PrimeKlik-like)
+   ========================= */
+.pk-footer{
+  margin-top: 44px;
+  padding: 0;
+  background: transparent;
+  border-top: 0;
+}
+
+/* kotak glass utama */
+.pk-footer__inner{
+  padding: 28px 26px 18px;
+  border-radius: 26px;
+
+  /* GLASS */
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.45);
+
+  /* biar aman jarak dari bawah */
+  margin-bottom: 34px;
+}
+
+.pk-footer__top{
+  display:grid;
+  grid-template-columns: 1.55fr 1fr 1fr 1fr;
+  gap: 42px;
+  align-items:start;
+}
+
+.pk-footer__brandRow{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom: 10px;
+}
+
+.pk-footer__logo{
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  flex: 0 0 auto;
+}
+.pk-footer__logo img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+
+.pk-footer__name{
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: .2px;
+  color: rgba(255,255,255,.92);
+  line-height: 1.1;
+}
+
+.pk-footer__tagline{
+  margin: 6px 0 18px;
+  color: rgba(255,255,255,.60);
+  line-height: 1.6;
+  max-width: 42ch;
+}
+
+.pk-footer__miniTitle{
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.42);
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.pk-footer__pay{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.pk-footer__payLogo{
+  height: 34px;
+  width: auto;
+  opacity: .9;
+  filter: drop-shadow(0 10px 22px rgba(0,0,0,.25));
+}
+
+.pk-col__title{
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.78);
+  font-weight: 900;
+  margin: 6px 0 12px;
+}
+
+.pk-links{
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pk-links a{
+  color: rgba(255,255,255,.55);
+  font-weight: 800;
+  transition: .18s ease;
+}
+.pk-links a:hover{
+  color: rgba(255,255,255,.90);
+  transform: translateX(2px);
+}
+
+.pk-divider{
+  margin: 22px 0 14px;
+  height: 1px;
+  background: rgba(255,255,255,.10);
+  width: 100%;
+}
+
+.pk-footer__bottom{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pk-copy{
+  color: rgba(255,255,255,.55);
+  font-weight: 900;
+}
+
+.pk-badges{
+  display:flex;
+  align-items:center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.pk-badge{
+  display:inline-flex;
+  align-items:center;
+  gap: 10px;
+  color: rgba(255,255,255,.55);
+  font-weight: 900;
+}
+
+.pk-badge svg{
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  opacity: .95;
+}
+
+/* Floating chat button (biar 
+
+    /* Floating WA */
+    .pk-chat{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: #25D366;
+      border: none;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      z-index: 999;
+      transition: .2s ease;
+    }
+    .pk-chat .wa-ico{ width: 26px; height: 26px; color: #fff; }
+/* Responsive */
+@media (max-width: 980px){
+  .pk-footer__top{
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
+}
+@media (max-width: 640px){
+  .pk-footer__top{ grid-template-columns: 1fr; }
+  .pk-footer__inner{
+    padding: 22px 18px 16px;
+    border-radius: 22px;
+    margin-bottom: 26px;
+  }
+  .pk-divider{ margin: 18px 0 12px; }
+}
+
+
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+      .service-grid{ grid-template-columns: repeat(2, 1fr); }
+      .faq{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+      .footer-brand{ justify-content: center; }
+      .footer-block{ text-align:center; }
+      .footer-list{ align-items: center; }
+    }
+    @media (max-width: 720px){
+      .grid{ grid-template-columns: 1fr; }
+      .service-grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Navbar responsive */
+    @media (max-width: 1100px){
+      .nav-links{ display:none; }
+      .search.search-desktop{ display:none; }
+      .nav-cta .btn:not(.primary){ display:none; }
+      .hamburger{ display:flex; }
+    }
+    /* =========================
+       MODAL (FIX RESPONSIVE)
+    ========================= */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0,0,0,.55);
+      z-index: 9999;
+    }
+    .modal-overlay.show{ display:flex; }
+
+    .modal{
+      width: min(560px, 100%);
+      max-height: min(82vh, 720px);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header{
+      flex: 0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .modal-close{
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,.9);
+      font-size: 18px;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+    }
+    .modal-close:hover{ background: rgba(255,255,255,.06); }
+
+    .modal-body{
+      flex: 1 1 auto;
+      padding: 16px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* FOOTER BUTTONS (rapi + kecil + sampingan) */
+    .modal-footer{
+      flex: 0 0 auto;
+      display:flex;
+      gap:8px;
+      padding:10px 12px;
+      justify-content:space-between;
+      align-items:center;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .modal-footer .btn{
+      flex: 1 1 0;
+      min-height: 38px;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 12px;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    #cancelModal{ flex: .75 1 0; }
+    #sendBtn{ flex: 1.25 1 0; }
+
+    /* FORM GRID */
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px){
+      .form-grid{ grid-template-columns: 1fr; }
+    }
+
+    .field label{
+      display:block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 900;
+      color: rgba(255,255,255,.82);
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      outline: none;
+      font: inherit;
+      display:block;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus{
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 0 0 3px rgba(117,83,255,.20);
+    }
+
+    .field select{
+      cursor:pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.85) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.85) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 38px;
+    }
+    .field select option{ color:#111; background:#fff; }
+
+    /* disabled input (admin yang isi) */
+    .field input:disabled{
+      opacity: 1;
+      cursor: not-allowed;
+      color: rgba(255,255,255,.82);
+      -webkit-text-fill-color: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.10);
+      box-shadow: none;
+    }
+
+    .req{ color:#ff6b6b; }
+  </style>
+</head>
+
+<body>
+  <header class="nav container" id="topNav">
+    <div class="nav-inner glass">
+      <a class="brand" href="#beranda" aria-label="Ke Beranda">
+        <span class="logo-wrap" aria-hidden="true">
+          <img class="logo-img" src="img/logo.png" alt="">
+        </span>
+        <span class="brand-name">Faxml Store</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigasi utama">
+        <a href="#beranda">Beranda</a>
+        <a href="#produk">Produk</a>
+        <a href="#service">Service</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="search" role="search">
+        <span class="s-ico">🔎</span>
+        <input id="searchInput" type="search" placeholder="Cari produk..." autocomplete="off">
+        <button class="s-clear" id="searchClear" type="button" aria-label="Hapus">✕</button>
+      </div>
+
+      <div class="nav-cta">
+        <a class="btn" href="#produk" title="Lihat katalog">Katalog</a>
+        <a class="btn primary" href="#produk" title="Mulai beli">Beli Premium</a>
+        <button class="hamburger" id="hamburger" aria-label="Buka menu" aria-expanded="false">
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile glass" id="mobileMenu" aria-label="Menu mobile">
+      <a href="#beranda">Beranda</a>
+      <a href="#produk">Produk</a>
+      <a href="#service">Service</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" id="beranda">
+      <div class="hero-grid">
+        <div class="hero-card glass">
+          <div class="kicker"><span class="dot"></span> Marketplace Aplikasi Premium • Garansi & Support</div>
+          <h1>Jual Aplikasi Premium, Aman, dan Tepercaya.</h1>
+          <p class="sub">Pilih produk → isi format → langsung menuju WhatsApp admin.</p>
+        </div>
+
+        <aside class="showcase glass" aria-label="Highlight">
+          <div class="badge">✨ Premium Picks</div>
+          <div class="mini">
+            <h3>Streaming & Hiburan</h3>
+            <p>Netflix / YouTube Premium</p>
+          </div>
+          <div class="mini">
+            <h3>Editing & Kreatif</h3>
+            <p>CapCut / Alight Motion</p>
+          </div>
+          <div class="mini">
+            <h3>Desain & Produktivitas</h3>
+            <p>Canva / Spotify</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="produk">
+      <div class="section-head">
+        <div>
+          <h2>Produk Premium</h2>
+          <p>Ketik di search untuk mencari produk.</p>
+        </div>
+        <a class="btn" href="#faq">Cara beli?</a>
+      </div>
+
+      <div class="grid" id="productGrid"></div>
+    </section>
+
+    <!-- =========================
+         SERVICE SECTION
+    ========================== -->
+    <section id="service">
+      <div class="section-head">
+        <div>
+          <h2>Service</h2>
+          <p>Kami bantu dari awal sampai jalan. Fokus ke pengalaman premium & aman.</p>
+        </div>
+        <a class="btn primary" href="#produk">Pilih Produk</a>
+      </div>
+
+      <div class="grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">⚙</span> Instalasi & Setup</div>
+          <p style="margin:0;color:var(--muted);">Bantuan instalasi, konfigurasi, dan optimasi agar siap dipakai.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">🔑</span> Aktivasi</div>
+          <p style="margin:0;color:var(--muted);">Panduan aktivasi jelas dan cepat sesuai paket yang dibeli.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">💬</span> Support</div>
+          <p style="margin:0;color:var(--muted);">Bantuan chat untuk kendala umum sesuai jam layanan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="section-head">
+        <div>
+          <h2>FAQ</h2>
+          <p>Jawaban singkat untuk pertanyaan yang sering ditanyakan.</p>
+        </div>
+        <a class="btn" href="#beranda">Kembali ke atas</a>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>Bagaimana cara membeli? <span class="chev">+</span></summary>
+          <div class="answer">Pilih produk → klik “Beli Sekarang” → otomatis diarahkan ke WhatsApp admin.</div>
+        </details>
+
+        <details>
+          <summary>Kenapa produk tidak muncul? <span class="chev">+</span></summary>
+          <div class="answer">Pastikan <b>gambar ada</b> di folder img, dan tidak ada error JS di Console.</div>
+        </details>
+
+        <details>
+          <summary>Search bisa cari apa saja? <span class="chev">+</span></summary>
+          <div class="answer">Bisa cari dari Nama / Brand / Label / Tag / Durasi. Contoh: <b>netflix</b>, <b>1 bulan</b>.</div>
+        </details>
+
+        <details>
+          <summary>Metode pembayaran apa saja? <span class="chev">+</span></summary>
+          <div class="answer">Bisa transfer/QRIS sesuai admin.</div>
+        </details>
+      </div>
+    </section>
+
+   <footer class="pk-footer">
+  <div class="pk-footer__inner container">
+
+    <div class="pk-footer__top">
+      <!-- LEFT BRAND -->
+      <div>
+        <div class="pk-footer__brandRow">
+          <span class="pk-footer__logo" aria-hidden="true">
+            <img src="img/logo.png" alt="">
+          </span>
+          <div class="pk-footer__name">Faxml Store</div>
+        </div>
+
+        <div class="pk-footer__miniTitle">Secured payment by</div>
+        <div class="pk-footer__pay">
+          <!-- ganti path logo sesuai punyamu -->
+          <img class="pk-footer__payLogo" src="img/tripay.webp" alt="Payment Logo"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <!-- COL 1 -->
+      <div class="pk-col">
+        <div class="pk-col__title">Products</div>
+        <div class="pk-links">
+          <a href="#produk">Harga</a>
+          <a href="#service">Services</a>
+          <a href="#produk">AI Tools</a>
+        </div>
+      </div>
+
+      <!-- COL 2 -->
+      <div class="pk-col">
+        <div class="pk-col__title">Profile</div>
+        <div class="pk-links">
+          <a href="#beranda">Tentang Kami</a>
+         <a id="footerKontak" href="#">Kontak</a>
+        </div>
+      </div>
+
+      <!-- COL 3 -->
+      <div class="pk-col">
+        <div class="pk-col__title">Legalitas</div>
+        <div class="pk-links">
+          <a href="#faq">Kebijakan Privasi</a>
+          <a href="#faq">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pk-divider"></div>
+
+    <div class="pk-footer__bottom">
+      <div class="pk-copy">© <span id="year"></span> Faxml Store.</div>
+
+      <div class="pk-badges">
+        <span class="pk-badge">
+          <!-- shield -->
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4z" stroke="rgba(34,197,94,.95)" stroke-width="2"/>
+            <path d="M8.5 12.2l2.2 2.2 4.8-5" stroke="rgba(34,197,94,.95)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Secure Payment
+        </span>
+
+        <span class="pk-badge">
+          <!-- info -->
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="rgba(59,130,246,.95)" stroke-width="2"/>
+            <path d="M12 10v7" stroke="rgba(59,130,246,.95)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 7h.01" stroke="rgba(59,130,246,.95)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          24/7 Support
+        </span>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<!-- Floating chat button (WhatsApp) -->
+<a class="pk-chat" href="https://wa.me/6288221694607" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
+  <svg class="wa-ico" viewBox="0 0 448 512" aria-hidden="true">
+    <path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-67.1-156.9zM224 438.7c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.2-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.8 184.6-184.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.7z"/>
+  </svg>
+</a>
+
+</a>
+
+  </main>
+
+  <!-- MODAL -->
+  <div id="buyModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h3 id="modalTitle">Format Pembelian App Premium</h3>
+        <button id="closeModal" class="modal-close" type="button" aria-label="Tutup">✕</button>
+      </div>
+
+      <form id="buyForm" class="modal-body">
+        <input type="hidden" id="mProduct">
+        <input type="hidden" id="mBrand">
+        <input type="hidden" id="mPrice">
+        <input type="hidden" id="mDuration">
+        <input type="hidden" id="mType">
+
+        <div class="form-grid">
+          <div class="field" style="grid-column:1/-1">
+            <label>Produk</label>
+            <input id="mPreview" type="text" disabled>
+          </div>
+
+          <div class="field">
+            <label>tgl order <span class="req">*</span></label>
+            <input id="f_tgl" type="date" required>
+          </div>
+
+          <div class="field">
+            <label>durasi <span class="req">*</span></label>
+            <input id="f_durasi" type="text" placeholder="Contoh: 1 Bulan" required>
+          </div>
+
+          <!-- NETFLIX -->
+          <div id="block_netflix" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>merk hp <span class="req">*</span></label>
+                <input id="n_merk" type="text" placeholder="Contoh: Samsung A54 / iPhone 13">
+              </div>
+              <div class="field">
+                <label>lokasi <span class="req">*</span></label>
+                <input id="n_lokasi" type="text" placeholder="Contoh: Kab/provinsi">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>1u/2u/semipriv/priv <span class="req">*</span></label>
+                <select id="n_tipe">
+                  <option value="">Pilih...</option>
+                  <option value="1u">1u</option>
+                  <option value="2u">2u</option>
+                  <option value="semipriv">semipriv</option>
+                  <option value="priv">priv</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- SHARING -->
+          <div id="block_sharing" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>nama apk <span class="req">*</span></label>
+                <input id="s_apk" type="text" placeholder="Contoh: CapCut / Netflix">
+              </div>
+              <div class="field">
+                <label>device <span class="req">*</span></label>
+                <select id="s_device">
+                  <option value="">Pilih...</option>
+                  <option value="Android">Android</option>
+                  <option value="iPhone">iPhone</option>
+                  <option value="PC/Laptop">PC/Laptop</option>
+                  <option value="TV">TV</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>lokasi <span class="req">*</span></label>
+                <input id="s_lokasi" type="text" placeholder="Contoh: Indonesia / Kota">
+              </div>
+              <div class="field">
+                <label>keterangan <span class="req">*</span></label>
+                <input id="s_ket" type="text" placeholder="Contoh: kirim payment qris bang">
+              </div>
+            </div>
+          </div>
+
+          <!-- PRIVATE -->
+          <div id="block_private" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>nama apk <span class="req">*</span></label>
+                <input id="p_apk" type="text" placeholder="Contoh: Vidio / ChatGPT">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>keterangan <span class="req">*</span></label>
+                <input id="p_ket" type="text" placeholder="Catatan / request">
+              </div>
+              <div class="field">
+                <label>email</label>
+                <input id="p_email" type="text" value="admin yang isi" disabled>
+              </div>
+              <div class="field">
+                <label>password</label>
+                <input id="p_pass" type="text" value="admin yang isi" disabled>
+              </div>
+            </div>
+          </div>
+
+          <!-- YOUTUBE -->
+          <div id="block_youtube" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>famplan/indplan <span class="req">*</span></label>
+                <select id="y_plan">
+                  <option value="">Pilih...</option>
+                  <option value="famplan">famplan (need email saja)</option>
+                  <option value="indplan">indplan (need email & pw)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>email <span class="req">*</span></label>
+                <input id="y_email" type="email" placeholder="email@gmail.com">
+              </div>
+              <div class="field">
+                <label>password (khusus indplan)</label>
+                <input id="y_pass" type="text" placeholder="isi jika indplan">
+              </div>
+            </div>
+          </div>
+
+          <!-- CANVA -->
+          <div id="block_canva" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>email <span class="req">*</span></label>
+                <input id="c_email" type="email" placeholder="email@gmail.com">
+              </div>
+              <div class="field">
+                <label>design/no <span class="req">*</span></label>
+                <input id="c_design" type="text" placeholder="Contoh: design / no">
+              </div>
+            </div>
+          </div>
+
+          <!-- SPOTIFY -->
+          <div id="block_spotify" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>famplan/indplan <span class="req">*</span></label>
+                <select id="sp_plan">
+                  <option value="">Pilih...</option>
+                  <option value="famplan">famplan</option>
+                  <option value="indplan">indplan</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>email <span class="req">*</span></label>
+                <input id="sp_email" type="email" placeholder="email@gmail.com">
+              </div>
+              <div class="field">
+                <label>password <span class="req">*</span></label>
+                <input id="sp_pass" type="text" placeholder="password akun">
+              </div>
+            </div>
+          </div>
+
+          <!-- ALIGHT -->
+          <div id="block_alight" style="display:none; grid-column:1/-1">
+            <div class="form-grid">
+              <div class="field">
+                <label>durasi</label>
+                <input id="a_durasi" type="text" value="1 tahun" disabled>
+              </div>
+              <div class="field">
+                <label>password <span class="req">*</span></label>
+                <input id="a_pass" type="text" placeholder="password akun">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>catatan (email wajib fresh no verif)</label>
+                <input id="a_note" type="text" placeholder="tulis email fresh (no verif)">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+      <div class="modal-footer">
+        <button type="button" class="btn" id="cancelModal">Batal</button>
+        <button id="sendBtn" type="submit" class="btn primary" form="buyForm">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // helpers
+    const qs = (q) => document.querySelector(q);
+    const qsa = (q) => document.querySelectorAll(q);
+    const normalize = (str) => (str ?? "").toString().toLowerCase().trim();
+    const requireVal = (v) => (v || "").toString().trim();
+
+    // WhatsApp
+    const WA_NUMBER = "6288221694607";
+    const waLink = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+
+    const formatRupiah = (n) => {
+      const num = Number(n) || 0;
+      return "Rp" + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+    const todayISO = () => {
+      const d = new Date();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${d.getFullYear()}-${mm}-${dd}`;
+    };
+
+    // footer year
+    const yearNow = qs("#yearNow");
+    if (yearNow) yearNow.textContent = new Date().getFullYear();
+
+    // mobile menu
+    const hamburger = qs("#hamburger");
+    const mobileMenu = qs("#mobileMenu");
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener("click", () => {
+        const isOpen = mobileMenu.classList.toggle("open");
+        hamburger.setAttribute("aria-expanded", String(isOpen));
+      });
+      mobileMenu.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          hamburger.setAttribute("aria-expanded", "false");
+        });
+      });
+    }
+
+    // =========================
+    // DATA PRODUK
+    // =========================
+    const products = [
+      { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 1 User", duration:"1 Bulan", price:35000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
+      { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 2 User", duration:"1 Bulan", price:27000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
+      { brand:"netflix", label:"NETFLIX", name:"Netflix Premium SemiPrivate", duration:"1 Bulan", price:39000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
+
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 3 User", duration:"1 Bulan", price:10000, stock:20, tag:"Team", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 8 User", duration:"1 Bulan", price:5000,  stock:20, tag:"Team", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 5 User", duration:"1 Bulan", price:7000,  stock:20, tag:"Team", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 7 Hari", duration:"7 Hari", price:12000, stock:20, tag:"Original", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 14 Hari", duration:"14 Hari", price:15000, stock:20, tag:"Original", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 28 Hari", duration:"28 Hari", price:20000, stock:20, tag:"Original", img:"img/capcut.jpg" },
+      { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi Full", duration:"35 Hari", price:23000, stock:20, tag:"Original", img:"img/capcut.jpg" },
+
+      { brand:"chatgpt", label:"CHATGPT", name:"ChatGPT Premium Private", duration:"1 Bulan", price:18000, stock:20, tag:"Populer", img:"img/chatgpt.png" },
+      { brand:"gemini",  label:"GEMINI",  name:"GEMINI PRO + GDRIVE 2TB + Veo3", duration:"1 Bulan", price:10000, stock:20, tag:"Populer", img:"img/gemini.png" },
+
+      { brand:"canva",   label:"CANVA",   name:"Canva Premium Team", duration:"1 Bulan", price:6000,  stock:50, tag:"Team", img:"img/canva.png" },
+      { brand:"canva",   label:"CANVA",   name:"Canva Premium lifetime", duration:"1 Tahun", price:22000,  stock:50, tag:"Team", img:"img/canva.png" },
+      { brand:"canva",   label:"CANVA",   name:"Canva Premium Team (Plus)", duration:"1 Tahun", price:20000, stock:20, tag:"Team", img:"img/canva.png" },
+
+      { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Famplan", duration:"1 Bulan", price:26000, stock:10, tag:"Ready", img:"img/spotify.png" },
+      { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Indplan", duration:"1 Bulan", price:28000, stock:10, tag:"Ready", img:"img/spotify.png" },
+
+      { brand:"youtube", label:"YOUTUBE", name:"YouTube Premium Famplan", duration:"1 Bulan", price:5000, stock:10, tag:"Team", img:"img/youtube.png" },
+      { brand:"youtube", label:"YOUTUBE", name:"YouTube Premium Indplan", duration:"1 Bulan", price:15000, stock:10, tag:"Populer", img:"img/youtube.png" },
+
+      { brand:"alight",  label:"ALIGHT",  name:"Alight Motion Premium", duration:"1 Tahun", price:10000, stock:100, tag:"Populer", img:"img/alightmotion.png" },
+      { brand:"alight",  label:"Tutor AM",  name:"Tutor Alight Motion", duration:"Seumurhidup", price:80000, stock:100, tag:"Populer", img:"img/tutoram.png" },
+
+      { brand:"wink",  label:"WINK", name:"Wink Premium Private Android", duration:"7 Hari", price:10000, stock:10, tag:"Populer", img:"img/wink.png" },
+
+      { brand:"viu",  label:"VIU", name:"Viu Premium Private", duration:"3 Bulan", price:13000, stock:20, tag:"Original", img:"img/viu.png" },
+      { brand:"viu",  label:"VIU", name:"Viu Premium Private", duration:"Lifetime", price:20000, stock:20, tag:"Populer", img:"img/viu.png" },
+
+      { brand:"bstation", label:"B-STATION", name:"Bstation Premium Sharing", duration:"1 Bulan", price:13000, stock:20, tag:"Populer", img:"img/bstation.png" },
+      { brand:"wetv", label:"WETV", name:"Wetv Premium Sharing 8 User", duration:"1 Bulan", price:10000, stock:20, tag:"Original", img:"img/wetv.png" },
+
+      { brand:"vidio", label:"VIDIO", name:"Vidio Premium Sharing 2 User", duration:"1 Bulan", price:25000, stock:20, tag:"Original", img:"img/vidio.png" },
+      { brand:"vidio", label:"VIDIO", name:"Vidio Premium Sharing 2u Onlyhp", duration:"1 Bulan", price:20000, stock:20, tag:"Original", img:"img/vidio.png" },
+      { brand:"vidio", label:"VIDIO", name:"Vidio Premium Private Alldev", duration:"1 Bulan", price:36000, stock:20, tag:"Original", img:"img/vidio.png" },
+      { brand:"vidio", label:"VIDIO", name:"Vidio Premium Private Onlyhp", duration:"1 Bulan", price:28000, stock:20, tag:"Original", img:"img/vidio.png" },
+      { brand:"vidio", label:"VIDIO", name:"Vidio OnlyTV", duration:"1 Tahun", price:13000, stock:20, tag:"Original", img:"img/vidio.png" },
+
+      { brand:"hbomax", label:"HBO MAX", name:"HBO MAX Sharing", duration:"1 Bulan", price:19000, stock:20, tag:"Original", img:"img/hbomax.png" },
+
+      { brand:"iqiyi", label:"IQIYI", name:"Iqiyi Sharing Standar", duration:"1 Bulan", price:12000, stock:20, tag:"Original", img:"img/iqiyi.png" },
+      { brand:"iqiyi", label:"IQIYI", name:"Iqiyi Sharing Prem", duration:"1 Bulan", price:15000, stock:20, tag:"Original", img:"img/iqiyi.png" },
+
+      { brand:"prime video", label:"PRIME VIDEO", name:"Prime Video Sharing", duration:"1 Bulan", price:12000, stock:20, tag:"Original", img:"img/primevideo.png" },
+      { brand:"prime video", label:"PRIME VIDEO", name:"Prime Video Private", duration:"1 Bulan", price:18000, stock:20, tag:"Original", img:"img/primevideo.png" },
+
+      { brand:"lightroom", label:"LIGHTROOM", name:"Lightroom Premium Sharing", duration:"1 Tahun", price:20000, stock:20, tag:"Original", img:"img/lightroom.png" },
+      { brand:"picsart", label:"PICSART", name:"Picsart Premium Private", duration:"1 Bulan", price:14000, stock:20, tag:"Original", img:"img/picsart.png" },
+    ];
+
+    // render
+    function renderProducts(list) {
+      const productGrid = qs("#productGrid");
+      if (!productGrid) return;
+
+      productGrid.innerHTML = list.map((p) => {
+        const ready = (Number(p.stock) || 0) > 0;
+        return `
+          <article class="card">
+            <div class="product-thumb">
+              <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">
+              <span class="stock-badge ${ready ? "" : "habis"}">${ready ? `Ready • ${p.stock}` : "Habis"}</span>
+              <div class="thumb-brand">${(p.label || p.brand || "")}</div>
+            </div>
+
+            <div class="product-top">
+              <span class="tag">${p.tag}</span>
+              <span class="product-sub">${p.duration}</span>
+            </div>
+
+            <h3>${p.name}</h3>
+            <p>Akses premium sesuai paket. Support tersedia untuk proses pembelian & kendala umum.</p>
+
+            <div class="price-row">
+              <div>
+                <span class="price">${formatRupiah(p.price)}</span>
+                <span class="tiny">/${normalize(p.duration)}</span>
+              </div>
+              <a class="btn" href="#faq">Detail</a>
+            </div>
+
+            ${
+              ready
+                ? `<button
+                    class="btn btn-buy primaryish"
+                    type="button"
+                    data-buy
+                    data-product="${p.name}"
+                    data-brand="${p.brand}"
+                    data-price="${p.price}"
+                    data-duration="${p.duration}"
+                  >Beli Sekarang</button>`
+                : `<button class="btn btn-buy out" disabled>Stok Habis</button>`
+            }
+          </article>
+        `;
+      }).join("");
+    }
+
+    // search
+    const searchInput = qs("#searchInput");
+    const searchClear = qs("#searchClear");
+
+    function applySearch(q) {
+      const query = normalize(q);
+      const filtered = !query ? products : products.filter((p) => {
+        const hay = [p.name, p.label, p.brand, p.tag, p.duration].map(normalize).join(" ");
+        return hay.includes(query);
+      });
+      renderProducts(filtered);
+    }
+    function setSearchValue(val) {
+      if (!searchInput) return;
+      searchInput.value = val;
+      searchInput.parentElement?.classList.toggle("has-value", normalize(val).length > 0);
+      applySearch(val);
+    }
+    searchInput?.addEventListener("input", (e) => setSearchValue(e.target.value));
+    searchClear?.addEventListener("click", () => setSearchValue(""));
+
+    // modal logic
+    const buyModal = qs("#buyModal");
+    const closeModal = qs("#closeModal");
+    const cancelModal = qs("#cancelModal");
+    const buyForm = qs("#buyForm");
+
+    const mProduct = qs("#mProduct");
+    const mBrand = qs("#mBrand");
+    const mPrice = qs("#mPrice");
+    const mDuration = qs("#mDuration");
+    const mType = qs("#mType");
+    const mPreview = qs("#mPreview");
+
+    const f_tgl = qs("#f_tgl");
+    const f_durasi = qs("#f_durasi");
+
+    const blocks = ["netflix","sharing","private","youtube","canva","spotify","alight"];
+    function showBlock(type){
+      blocks.forEach((k) => {
+        const el = qs("#block_" + k);
+        if (el) el.style.display = (k === type) ? "block" : "none";
+      });
+    }
+
+    function detectType(productName, brand) {
+      const n = normalize(productName);
+      const b = normalize(brand);
+
+      if (b.includes("netflix") || n.includes("netflix")) return "netflix";
+      if (b.includes("youtube") || n.includes("youtube")) return "youtube";
+      if (b.includes("canva") || n.includes("canva")) return "canva";
+      if (b.includes("spotify") || n.includes("spotify")) return "spotify";
+      if (b.includes("alight") || n.includes("alight")) return "alight";
+      if (n.includes("private")) return "private";
+      return "sharing";
+    }
+
+    function openBuyModal({ product, brand, price, duration }) {
+      const type = detectType(product, brand);
+
+      mProduct.value = product || "";
+      mBrand.value = brand || "";
+      mPrice.value = price || "";
+      mDuration.value = duration || "";
+      mType.value = type;
+
+      mPreview.value = `${product} • ${duration} • ${formatRupiah(price)}`;
+      f_tgl.value = todayISO();
+      f_durasi.value = duration || "";
+
+      const s_apk = qs("#s_apk"); if (s_apk) s_apk.value = product || "";
+      const p_apk = qs("#p_apk"); if (p_apk) p_apk.value = product || "";
+
+      showBlock(type);
+
+      buyModal.classList.add("show");
+      buyModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeBuyModal() {
+      buyModal.classList.remove("show");
+      buyModal.setAttribute("aria-hidden", "true");
+      buyForm.reset();
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-buy]");
+      if (!btn) return;
+
+      openBuyModal({
+        product: btn.getAttribute("data-product"),
+        brand: btn.getAttribute("data-brand"),
+        price: btn.getAttribute("data-price"),
+        duration: btn.getAttribute("data-duration"),
+      });
+    });
+
+    closeModal?.addEventListener("click", closeBuyModal);
+    cancelModal?.addEventListener("click", closeBuyModal);
+    buyModal?.addEventListener("click", (e) => { if (e.target === buyModal) closeBuyModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && buyModal?.classList.contains("show")) closeBuyModal(); });
+
+    // submit -> WhatsApp
+    buyForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const type = mType.value;
+      const tgl = requireVal(f_tgl.value);
+      const durasi = requireVal(f_durasi.value);
+      if (!tgl || !durasi) return alert("Harap isi tgl order & durasi (*)");
+
+      let msg = "";
+
+      if (type === "netflix") {
+        const merk = requireVal(qs("#n_merk").value);
+        const lokasi = requireVal(qs("#n_lokasi").value);
+        const tipe = requireVal(qs("#n_tipe").value);
+        if (!merk || !lokasi || !tipe) return alert("Harap isi semua field wajib (*)");
+
+        msg =
+`*Format Netflix*
+
+*🐣* tgl order : ${tgl}
+*🐣* durasi : ${durasi}
+*🐣* merk hp : ${merk}
+*🐣* lokasi : ${lokasi}
+*🐣* 1u/2u/semipriv/priv : ${tipe}`;
+      }
+      else if (type === "youtube") {
+        const plan = requireVal(qs("#y_plan").value);
+        const email = requireVal(qs("#y_email").value);
+        const pass = requireVal(qs("#y_pass").value);
+        if (!plan || !email) return alert("Harap isi semua field wajib (*)");
+        if (plan === "indplan" && !pass) return alert("Indplan wajib isi password");
+
+        msg =
+`•┈  *format youtube* ┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* durasi : ${durasi}
+*𔘓* email : ${email}
+*𔘓* password : ${pass || "-"}
+*𔘓* famplan/indplan : ${plan}`;
+      }
+      else if (type === "canva") {
+        const email = requireVal(qs("#c_email").value);
+        const design = requireVal(qs("#c_design").value);
+        if (!email || !design) return alert("Harap isi semua field wajib (*)");
+
+        msg =
+`•┈  *format canva* ┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* durasi : ${durasi}
+*𔘓* email : ${email}
+*𔘓* design/no : ${design}`;
+      }
+      else if (type === "spotify") {
+        const plan = requireVal(qs("#sp_plan").value);
+        const email = requireVal(qs("#sp_email").value);
+        const pass = requireVal(qs("#sp_pass").value);
+        if (!plan || !email || !pass) return alert("Harap isi semua field wajib (*)");
+
+        msg =
+`•┈  *format spotify* ┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* durasi : ${durasi}
+*𔘓* email : ${email}
+*𔘓* password: ${pass}
+*𔘓* famplan/indplan : ${plan}`;
+      }
+      else if (type === "alight") {
+        const pass = requireVal(qs("#a_pass").value);
+        const note = requireVal(qs("#a_note").value);
+        if (!pass) return alert("Harap isi password (*)");
+
+        msg =
+`•┈  *format alightmotion* ┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* durasi : 1 tahun
+*𔘓* password : ${pass}
+
+• email wajib fresh no verif
+${note ? "• catatan : " + note : ""}`.trim();
+      }
+      else if (type === "private") {
+        const apk = requireVal(qs("#p_apk").value);
+        const ket = requireVal(qs("#p_ket").value);
+        if (!apk || !ket) return alert("Harap isi semua field wajib (*)");
+
+        msg =
+`•┈ *format app private*┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* nama apk : ${apk}
+*𔘓* durasi : ${durasi}
+*𔘓* email : admin yang isi
+*𔘓* password : admin yang isi
+*𔘓* keterangan : ${ket}`;
+      }
+      else { // sharing
+        const apk = requireVal(qs("#s_apk").value);
+        const device = requireVal(qs("#s_device").value);
+        const lokasi = requireVal(qs("#s_lokasi").value);
+        const ket = requireVal(qs("#s_ket").value);
+        if (!apk || !device || !lokasi || !ket) return alert("Harap isi semua field wajib (*)");
+
+        msg =
+`•┈  *format app sharing* ┈•
+
+*𔘓* tgl order : ${tgl}
+*𔘓* nama apk : ${apk}
+*𔘓* durasi : ${durasi}
+*𔘓* device : ${device}
+*𔘓* lokasi : ${lokasi}
+*𔘓* keterangan : ${ket}`;
+      }
+
+      window.open(waLink(msg), "_blank", "noopener,noreferrer");
+      closeBuyModal();
+    });
+
+    // init aman
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts(products);
+      applySearch("");
+    });
+  </script>
+</body>
+</html>
