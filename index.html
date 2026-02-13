@@ -9,613 +9,487 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
- <style>
-:root{
-  --bg0:#070913;
-  --bg1:#0b1024;
-  --stroke: rgba(255,255,255,.14);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.68);
-  --shadow: 0 20px 60px rgba(0,0,0,.45);
-  --glow1: rgba(117, 83, 255, .35);
-  --glow2: rgba(0, 255, 200, .18);
-  --radius: 18px;
-  --radius2: 26px;
-  --max: 1120px;
-}
+  <style>
+    :root{
+      --bg0:#070913;
+      --bg1:#0b1024;
+      --stroke: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --glow1: rgba(117, 83, 255, .35);
+      --glow2: rgba(0, 255, 200, .18);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1120px;
+    }
 
-*{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
-body{
-  margin:0;
-  font-family:"Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(1200px 700px at 15% 10%, var(--glow1), transparent 55%),
-    radial-gradient(900px 600px at 85% 15%, rgba(0, 210, 255, .20), transparent 55%),
-    radial-gradient(800px 600px at 70% 85%, var(--glow2), transparent 55%),
-    linear-gradient(180deg, var(--bg0), var(--bg1));
-  min-height:100vh;
-  overflow-x:hidden;
-  background-size: 140% 140%, 160% 160%, 150% 150%, 100% 100%;
-  background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%;
-  animation: bgShift 18s ease-in-out infinite;
-}
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:"Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, var(--glow1), transparent 55%),
+        radial-gradient(900px 600px at 85% 15%, rgba(0, 210, 255, .20), transparent 55%),
+        radial-gradient(800px 600px at 70% 85%, var(--glow2), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+      background-size: 140% 140%, 160% 160%, 150% 150%, 100% 100%;
+      background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%;
+      animation: bgShift 18s ease-in-out infinite;
+    }
+    header, main{ position:relative; z-index:1; }
+    @keyframes bgShift{
+      0%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
+      50%{ background-position: 100% 30%, 0% 60%, 20% 0%, 0% 0%; }
+      100%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
+    }
 
-/* IMPORTANT: konten di atas overlay */
-header, main{ position:relative; z-index:1; }
+    a{ color:inherit; text-decoration:none; }
+    .container{ width:min(var(--max), calc(100% - 40px)); margin:0 auto; }
 
-@keyframes bgShift{
-  0%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
-  50%{ background-position: 100% 30%, 0% 60%, 20% 0%, 0% 0%; }
-  100%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
-}
+    .glass{
+      background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
 
-a{ color:inherit; text-decoration:none; }
-.container{ width:min(var(--max), calc(100% - 40px)); margin:0 auto; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 14px;
+      transition: .2s ease;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.09);
+      border-color: rgba(255,255,255,.22);
+    }
+    .btn.primary{
+      border-color: rgba(117,83,255,.45);
+      background: linear-gradient(135deg, rgba(117,83,255,.32), rgba(0,210,255,.18));
+      box-shadow: 0 14px 40px rgba(117,83,255,.18);
+    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none !important; }
 
-.glass{
-  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: var(--shadow);
-}
+    /* NAV */
+    .nav{ position: sticky; top: 14px; z-index: 50; margin-top: 14px; }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:12px 14px; border-radius:999px; min-width:0;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; padding-left:6px; font-weight:900; flex: 1 1 auto; min-width:0; }
+    .brand-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .logo-wrap{
+      width:38px; height:38px; border-radius:12px; overflow:hidden;
+      flex:0 0 auto; border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(117,83,255,.25); background: rgba(255,255,255,.06);
+    }
+    .logo-img{ width:100%; height:100%; display:block; object-fit: cover; }
 
-.btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:10px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-weight: 900;
-  font-size: 14px;
-  transition: .2s ease;
-  cursor:pointer;
-  user-select:none;
-  white-space:nowrap;
-}
-.btn:hover{
-  transform: translateY(-1px);
-  background: rgba(255,255,255,.09);
-  border-color: rgba(255,255,255,.22);
-}
-.btn.primary{
-  border-color: rgba(117,83,255,.45);
-  background: linear-gradient(135deg, rgba(117,83,255,.32), rgba(0,210,255,.18));
-  box-shadow: 0 14px 40px rgba(117,83,255,.18);
-}
-.btn:disabled{ opacity:.55; cursor:not-allowed; transform:none !important; }
+    .nav-links{ display:flex; gap:8px; align-items:center; justify-content:center; flex:1 1 auto; min-width:0; }
+    .nav-links a{
+      padding:10px 12px; border-radius:999px; color: var(--muted);
+      border:1px solid transparent; transition:.2s ease; font-weight:900; font-size:14px;
+      white-space:nowrap;
+    }
+    .nav-links a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
 
-/* NAV */
-.nav{ position: sticky; top: 14px; z-index: 50; margin-top: 14px; }
-.nav-inner{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:12px 14px; border-radius:999px; min-width:0;
-}
-.brand{ display:flex; align-items:center; gap:10px; padding-left:6px; font-weight:900; flex: 1 1 auto; min-width:0; }
-.brand-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.logo-wrap{
-  width:38px; height:38px; border-radius:12px; overflow:hidden;
-  flex:0 0 auto; border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 12px 30px rgba(117,83,255,.25); background: rgba(255,255,255,.06);
-}
-.logo-img{ width:100%; height:100%; display:block; object-fit: cover; }
+    .nav-cta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
 
-.nav-links{ display:flex; gap:8px; align-items:center; justify-content:center; flex:1 1 auto; min-width:0; }
-.nav-links a{
-  padding:10px 12px; border-radius:999px; color: var(--muted);
-  border:1px solid transparent; transition:.2s ease; font-weight:900; font-size:14px;
-  white-space:nowrap;
-}
-.nav-links a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
+    .search{
+      display:flex; align-items:center; gap:8px; padding: 8px 10px;
+      border-radius: 999px; border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      width: clamp(160px, 22vw, 280px);
+      max-width: 280px; min-width: 160px; flex: 0 1 auto; min-width:0;
+    }
+    .search input{
+      width:100%; min-width:0; border:0; outline:none; background: transparent;
+      color: var(--text); font: inherit; font-size: 14px;
+    }
+    .search input::placeholder{ color: rgba(255,255,255,.55); }
+    .search .s-clear{
+      border:0; background: transparent; color: rgba(255,255,255,.8);
+      cursor:pointer; padding: 0 6px; display:none; font-weight:900;
+    }
+    .search.has-value .s-clear{ display:block; }
 
-.nav-cta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
+    .hamburger{
+      display:none; width:42px; height:42px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06);
+      align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
+    }
+    .hamburger span{ width:18px; height:2px; background: rgba(255,255,255,.85); position:relative; display:block; border-radius:999px; }
+    .hamburger span::before,.hamburger span::after{
+      content:""; position:absolute; left:0; width:18px; height:2px;
+      background: rgba(255,255,255,.85); border-radius:999px;
+    }
+    .hamburger span::before{ top:-6px; }
+    .hamburger span::after{ top:6px; }
 
-.search{
-  display:flex; align-items:center; gap:8px; padding: 8px 10px;
-  border-radius: 999px; border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.06);
-  width: clamp(160px, 22vw, 280px);
-  max-width: 280px; min-width: 160px; flex: 0 1 auto; min-width:0;
-}
-.search input{
-  width:100%; min-width:0; border:0; outline:none; background: transparent;
-  color: var(--text); font: inherit; font-size: 14px;
-}
-.search input::placeholder{ color: rgba(255,255,255,.55); }
-.search .s-clear{
-  border:0; background: transparent; color: rgba(255,255,255,.8);
-  cursor:pointer; padding: 0 6px; display:none; font-weight:900;
-}
-.search.has-value .s-clear{ display:block; }
+    .mobile{ display:none; margin-top:10px; padding:10px; border-radius: var(--radius2); }
+    .mobile.open{ display:block; }
+    .mobile a{
+      display:block; padding:12px 12px; border-radius:14px; color: var(--muted);
+      font-weight:900; border:1px solid transparent; transition:.2s ease;
+    }
+    .mobile a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
 
-.hamburger{
-  display:none; width:42px; height:42px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06);
-  align-items:center; justify-content:center; cursor:pointer; flex:0 0 auto;
-}
-.hamburger span{ width:18px; height:2px; background: rgba(255,255,255,.85); position:relative; display:block; border-radius:999px; }
-.hamburger span::before,.hamburger span::after{
-  content:""; position:absolute; left:0; width:18px; height:2px;
-  background: rgba(255,255,255,.85); border-radius:999px;
-}
-.hamburger span::before{ top:-6px; }
-.hamburger span::after{ top:6px; }
+    @media (max-width: 1100px){
+      .nav-links{ display:none; }
+      .nav-cta .btn:not(.primary){ display:none; }
+      .hamburger{ display:flex; }
+    }
+    @media (max-width: 640px){
+      .nav-inner{
+        display:grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "brand cta" "search search";
+        gap:10px;
+        padding:12px;
+        border-radius: var(--radius2);
+      }
+      .brand{ grid-area: brand; }
+      .nav-cta{ grid-area: cta; justify-content:flex-end; }
+      .search{ grid-area: search; width:100%; max-width:none; min-width:0; }
+      .btn{ padding: 9px 12px; font-size:13px; }
+      .hamburger{ width:40px; height:40px; }
+    }
 
-.mobile{ display:none; margin-top:10px; padding:10px; border-radius: var(--radius2); }
-.mobile.open{ display:block; }
-.mobile a{
-  display:block; padding:12px 12px; border-radius:14px; color: var(--muted);
-  font-weight:900; border:1px solid transparent; transition:.2s ease;
-}
-.mobile a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
+    /* HERO */
+    .hero{ padding:44px 0 26px; }
+    .hero-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch; }
+    .hero-card{ padding:26px; border-radius: var(--radius2); position:relative; overflow:hidden; }
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted); font-weight:900; font-size:13px;
+    }
+    .dot{ width:8px; height:8px; border-radius:999px; background: rgba(0,255,200,.85); box-shadow: 0 0 22px rgba(0,255,200,.35); }
+    h1{ margin:14px 0 10px; font-size: clamp(30px, 4vw, 44px); line-height:1.1; letter-spacing:-0.6px; }
+    .sub{ margin:0 0 18px; color: var(--muted); font-size:16px; line-height:1.6; max-width:62ch; }
 
-@media (max-width: 1100px){
-  .nav-links{ display:none; }
-  .nav-cta .btn:not(.primary){ display:none; }
-  .hamburger{ display:flex; }
-}
-@media (max-width: 640px){
-  .nav-inner{
-    display:grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas: "brand cta" "search search";
-    gap:10px;
-    padding:12px;
-    border-radius: var(--radius2);
-  }
-  .brand{ grid-area: brand; }
-  .nav-cta{ grid-area: cta; justify-content:flex-end; }
-  .search{ grid-area: search; width:100%; max-width:none; min-width:0; }
-  .btn{ padding: 9px 12px; font-size:13px; }
-  .hamburger{ width:40px; height:40px; }
-}
+    .showcase{ padding:18px; border-radius: var(--radius2); display:flex; flex-direction:column; gap:12px; }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px; padding:7px 10px;
+      border-radius:999px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-weight:900; font-size:12px; width: fit-content;
+    }
+    .mini{ padding:14px; border-radius:18px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
+    .mini h3{ margin:0 0 6px; font-size:14px; }
+    .mini p{ margin:0; color: var(--muted); font-size:13px; line-height:1.5; }
 
-/* HERO */
-.hero{ padding:44px 0 26px; }
-.hero-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch; }
-.hero-card{ padding:26px; border-radius: var(--radius2); position:relative; overflow:hidden; }
-.kicker{
-  display:inline-flex; gap:10px; align-items:center;
-  padding:8px 12px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.05);
-  color: var(--muted); font-weight:900; font-size:13px;
-}
-.dot{ width:8px; height:8px; border-radius:999px; background: rgba(0,255,200,.85); box-shadow: 0 0 22px rgba(0,255,200,.35); }
-h1{ margin:14px 0 10px; font-size: clamp(30px, 4vw, 44px); line-height:1.1; letter-spacing:-0.6px; }
-.sub{ margin:0 0 18px; color: var(--muted); font-size:16px; line-height:1.6; max-width:62ch; }
+    section{ padding:18px 0 24px; }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:14px; }
+    .section-head h2{ margin:0; font-size:22px; letter-spacing:-.2px; }
+    .section-head p{ margin:6px 0 0; color: var(--muted); max-width:64ch; line-height:1.6; font-size:14px; font-weight:700; }
 
-.showcase{ padding:18px; border-radius: var(--radius2); display:flex; flex-direction:column; gap:12px; }
-.badge{
-  display:inline-flex; align-items:center; gap:8px; padding:7px 10px;
-  border-radius:999px; border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04); color: var(--muted);
-  font-weight:900; font-size:12px; width: fit-content;
-}
-.mini{ padding:14px; border-radius:18px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
-.mini h3{ margin:0 0 6px; font-size:14px; }
-.mini p{ margin:0; color: var(--muted); font-size:13px; line-height:1.5; }
+    /* Produk grid */
+    .grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } .grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
 
-section{ padding:18px 0 24px; }
-.section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:14px; }
-.section-head h2{ margin:0; font-size:22px; letter-spacing:-.2px; }
-.section-head p{ margin:6px 0 0; color: var(--muted); max-width:64ch; line-height:1.6; font-size:14px; font-weight:700; }
+    .card{
+      padding:14px; border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      transition:.2s ease; position:relative; overflow:hidden;
+    }
+    .card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
 
-/* Produk grid */
-.grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-@media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } .grid{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 720px){ .grid{ grid-template-columns: 1fr; } }
+    .product-thumb{
+      position:relative; height:150px; border-radius:16px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); margin-bottom:12px;
+    }
+    .product-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+    .product-thumb::after{
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(700px 220px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
+      pointer-events:none; z-index:2;
+    }
+    .thumb-brand{
+      position:absolute; left:14px; bottom:14px; z-index:3;
+      font-weight:900; letter-spacing:.8px; text-transform: uppercase; font-size: 18px;
+      opacity:.95; text-shadow: 0 12px 30px rgba(0,0,0,.55);
+    }
+    .stock-badge{
+      position:absolute; top:12px; right:12px; z-index:4;
+      padding:6px 10px; border-radius:10px; font-size:12px; font-weight:900;
+      color:#fff; border:1px solid rgba(255,255,255,.14);
+      background: rgba(34,197,94,.75); box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .stock-badge.habis{ background: rgba(239,68,68,.78); }
 
-.card{
-  padding:14px; border-radius: var(--radius);
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  transition:.2s ease; position:relative; overflow:hidden;
-}
-.card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+    .tag{
+      display:inline-flex; align-items:center; padding:6px 10px;
+      border-radius:999px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-size:12px; font-weight:900; white-space:nowrap;
+    }
+    .product-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
+    .product-sub{ margin:0 0 8px; color: rgba(255,255,255,.72); font-size:12px; font-weight:900; }
+    .card h3{ margin:8px 0 6px; font-size:16px; letter-spacing:-.2px; }
+    .card p{ margin:0 0 12px; color: var(--muted); font-size:13px; line-height:1.6; }
 
-.product-thumb{
-  position:relative; height:150px; border-radius:16px; overflow:hidden;
-  border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); margin-bottom:12px;
-}
-.product-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
-.product-thumb::after{
-  content:""; position:absolute; inset:0;
-  background:
-    radial-gradient(700px 220px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
-  pointer-events:none; z-index:2;
-}
-.thumb-brand{
-  position:absolute; left:14px; bottom:14px; z-index:3;
-  font-weight:900; letter-spacing:.8px; text-transform: uppercase; font-size: 18px;
-  opacity:.95; text-shadow: 0 12px 30px rgba(0,0,0,.55);
-}
-.stock-badge{
-  position:absolute; top:12px; right:12px; z-index:4;
-  padding:6px 10px; border-radius:10px; font-size:12px; font-weight:900;
-  color:#fff; border:1px solid rgba(255,255,255,.14);
-  background: rgba(34,197,94,.75); box-shadow: 0 10px 26px rgba(0,0,0,.25);
-}
-.stock-badge.habis{ background: rgba(239,68,68,.78); }
+    .price-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .price{ font-weight:900; letter-spacing:.2px; }
+    .tiny{ color: var(--muted); font-size:12px; margin-left:8px; font-weight:800; }
 
-.tag{
-  display:inline-flex; align-items:center; padding:6px 10px;
-  border-radius:999px; border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04); color: var(--muted);
-  font-size:12px; font-weight:900; white-space:nowrap;
-}
-.product-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
-.product-sub{ margin:0 0 8px; color: rgba(255,255,255,.72); font-size:12px; font-weight:900; }
-.card h3{ margin:8px 0 6px; font-size:16px; letter-spacing:-.2px; }
-.card p{ margin:0 0 12px; color: var(--muted); font-size:13px; line-height:1.6; }
+    .btn-buy{
+      width:100%; margin-top:12px; border-radius:12px; height:40px;
+      font-weight:900;
+    }
+    .btn-buy.primaryish{
+      border-color: rgba(29,107,255,.45);
+      background: linear-gradient(180deg, rgba(29,107,255,.95), rgba(11,92,255,.95));
+      box-shadow: 0 14px 40px rgba(29,107,255,.18);
+    }
+    .btn-buy.out{
+      background: rgba(148,163,184,.18);
+      border-color: rgba(148,163,184,.22);
+      color: rgba(255,255,255,.75);
+    }
 
-.price-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.price{ font-weight:900; letter-spacing:.2px; }
-.tiny{ color: var(--muted); font-size:12px; margin-left:8px; font-weight:800; }
+    /* MODAL */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0,0,0,.55);
+      z-index: 9999;
+    }
+    .modal-overlay.show{ display:flex; }
 
-.btn-buy{
-  width:100%; margin-top:12px; border-radius:12px; height:40px;
-  font-weight:900;
-}
-.btn-buy.primaryish{
-  border-color: rgba(29,107,255,.45);
-  background: linear-gradient(180deg, rgba(29,107,255,.95), rgba(11,92,255,.95));
-  box-shadow: 0 14px 40px rgba(29,107,255,.18);
-}
-.btn-buy.out{
-  background: rgba(148,163,184,.18);
-  border-color: rgba(148,163,184,.22);
-  color: rgba(255,255,255,.75);
-}
+    .modal{
+      width: min(560px, 100%);
+      max-height: min(82vh, 720px);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header{
+      flex: 0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .modal-close{
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,.9);
+      font-size: 18px;
+      cursor: pointer;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+    }
+    .modal-close:hover{ background: rgba(255,255,255,.06); }
 
-/* SERVICE */
-.service-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
-@media (max-width: 980px){ .service-grid{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 720px){ .service-grid{ grid-template-columns: 1fr; } }
+    .modal-body{
+      flex: 1 1 auto;
+      padding: 16px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .modal-footer{
+      flex: 0 0 auto;
+      display:flex;
+      gap:8px;
+      padding:10px 12px;
+      justify-content:space-between;
+      align-items:center;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .modal-footer .btn{
+      flex: 1 1 0;
+      min-height: 38px;
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 12px;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    #cancelModal{ flex: .75 1 0; }
+    #sendBtn{ flex: 1.25 1 0; }
 
-.service-card{
-  padding:16px;
-  border-radius: var(--radius);
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  transition:.2s ease;
-}
-.service-card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
-.service-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-.service-ico{
-  width:42px; height:42px;
-  border-radius:14px;
-  display:flex; align-items:center; justify-content:center;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(255,255,255,.06);
-  font-size:18px;
-}
-.service-card h3{ margin:4px 0 8px; font-size:16px; letter-spacing:-.2px; }
-.service-card p{ margin:0 0 12px; color: var(--muted); font-size:13px; line-height:1.6; }
-.service-actions{ display:flex; gap:10px; align-items:center; }
-.service-actions .btn{ border-radius:12px; }
+    .form-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px){ .form-grid{ grid-template-columns: 1fr; } }
 
-/* FAQ */
-.faq{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
-details{
-  border-radius: var(--radius);
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  padding:14px;
-  transition:.2s ease;
-  overflow:hidden;
-}
-details:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); }
-summary{
-  cursor:pointer;
-  list-style:none;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px;
-  font-weight:900;
-  font-size:14px;
-}
-summary::-webkit-details-marker{ display:none; }
-.chev{
-  width:30px; height:30px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.04);
-  display:inline-flex; align-items:center; justify-content:center;
-  flex:0 0 auto;
-  transition:.2s ease;
-  color: var(--muted);
-  font-weight:900;
-}
-details[open] .chev{
-  transform: rotate(45deg);
-  color: var(--text);
-  border-color: rgba(255,255,255,.18);
-  background: rgba(255,255,255,.06);
-}
-.answer{ margin-top:10px; color: var(--muted); line-height:1.7; font-size:13px; font-weight: 700; }
+    .field label{
+      display:block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 900;
+      color: rgba(255,255,255,.82);
+    }
+    .field input,
+    .field textarea,
+    .field select{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      outline: none;
+      font: inherit;
+      display:block;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus{
+      border-color: rgba(255,255,255,.22);
+      box-shadow: 0 0 0 3px rgba(117,83,255,.20);
+    }
+    .field select{
+      cursor:pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.85) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.85) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      padding-right: 38px;
+    }
+    .field select option{ color:#111; background:#fff; }
+    .field input:disabled{
+      opacity: 1;
+      cursor: not-allowed;
+      color: rgba(255,255,255,.82);
+      -webkit-text-fill-color: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.10);
+      box-shadow: none;
+    }
+    .req{ color:#ff6b6b; }
 
-/* FOOTER (PrimeKlik-like) */
-.pk-footer{ margin-top: 44px; padding: 0; background: transparent; border-top: 0; }
-.pk-footer__inner{
-  padding: 28px 26px 18px;
-  border-radius: 26px;
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
-  border: 1px solid rgba(255,255,255,.14);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 20px 60px rgba(0,0,0,.45);
-  margin-bottom: 34px;
-}
-.pk-footer__top{ display:grid; grid-template-columns: 1.55fr 1fr 1fr 1fr; gap: 42px; align-items:start; }
-.pk-footer__brandRow{ display:flex; align-items:center; gap:12px; margin-bottom: 10px; }
-.pk-footer__logo{
-  width: 34px; height: 34px; border-radius: 12px; overflow:hidden;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  flex: 0 0 auto;
-}
-.pk-footer__logo img{ width:100%; height:100%; object-fit: cover; display:block; }
-.pk-footer__name{ font-weight: 900; font-size: 20px; letter-spacing: .2px; color: rgba(255,255,255,.92); line-height: 1.1; }
-.pk-footer__tagline{ margin: 6px 0 18px; color: rgba(255,255,255,.60); line-height: 1.6; max-width: 42ch; }
-.pk-footer__miniTitle{ font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.42); font-weight: 900; margin-bottom: 10px; }
-.pk-footer__pay{ display:flex; align-items:center; gap: 12px; margin-top: 6px; }
-.pk-footer__payLogo{ height: 34px; width: auto; opacity: .9; filter: drop-shadow(0 10px 22px rgba(0,0,0,.25)); }
-.pk-col__title{ font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.78); font-weight: 900; margin: 6px 0 12px; }
-.pk-links{ display:flex; flex-direction: column; gap: 12px; }
-.pk-links a{ color: rgba(255,255,255,.55); font-weight: 800; transition: .18s ease; }
-.pk-links a:hover{ color: rgba(255,255,255,.90); transform: translateX(2px); }
-.pk-divider{ margin: 22px 0 14px; height: 1px; background: rgba(255,255,255,.10); width: 100%; }
-.pk-footer__bottom{ display:flex; align-items:center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
-.pk-copy{ color: rgba(255,255,255,.55); font-weight: 900; }
-.pk-badges{ display:flex; align-items:center; gap: 18px; flex-wrap: wrap; }
-.pk-badge{ display:inline-flex; align-items:center; gap: 10px; color: rgba(255,255,255,.55); font-weight: 900; }
-.pk-badge svg{ width: 18px; height: 18px; flex: 0 0 auto; opacity: .95; }
+    /* Floating WhatsApp */
+    .pk-chat{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: #25D366;
+      border: none;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+      z-index: 999;
+      transition: .2s ease;
+    }
+    .pk-chat:hover{ transform: translateY(-2px); }
+    .pk-chat .wa-ico{ width: 26px; height: 26px; color: #fff; }
 
-/* Floating WA (FIXED) */
-.pk-chat{
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  width: 52px;
-  height: 52px;
-  border-radius: 999px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background: #25D366;
-  border: none;
-  box-shadow: 0 16px 40px rgba(0,0,0,.45);
-  z-index: 999;
-  transition: .2s ease;
-}
-.pk-chat:hover{ transform: translateY(-2px); }
-.pk-chat .wa-ico{ width: 26px; height: 26px; color: #fff; }
-
-/* Footer responsive */
-@media (max-width: 980px){
-  .pk-footer__top{ grid-template-columns: 1fr 1fr; gap: 26px; }
-}
-@media (max-width: 640px){
-  .pk-footer__top{ grid-template-columns: 1fr; }
-  .pk-footer__inner{ padding: 22px 18px 16px; border-radius: 22px; margin-bottom: 26px; }
-  .pk-divider{ margin: 18px 0 12px; }
-}
-
-/* MODAL (FIX RESPONSIVE) */
-.modal-overlay{
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: rgba(0,0,0,.55);
-  z-index: 9999;
-}
-.modal-overlay.show{ display:flex; }
-
-.modal{
-  width: min(560px, 100%);
-  max-height: min(82vh, 720px);
-  border-radius: 18px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header{
-  flex: 0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid rgba(255,255,255,.10);
-}
-
-.modal-close{
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,.9);
-  font-size: 18px;
-  cursor: pointer;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-}
-.modal-close:hover{ background: rgba(255,255,255,.06); }
-
-.modal-body{
-  flex: 1 1 auto;
-  padding: 16px;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.modal-footer{
-  flex: 0 0 auto;
-  display:flex;
-  gap:8px;
-  padding:10px 12px;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  border-top: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.modal-footer .btn{
-  flex: 1 1 0;
-  min-height: 38px;
-  padding: 8px 12px;
-  font-size: 13px;
-  border-radius: 12px;
-  white-space: nowrap;
-  line-height: 1;
-}
-#cancelModal{ flex: .75 1 0; }
-#sendBtn{ flex: 1.25 1 0; }
-
-/* FORM GRID */
-.form-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-@media (max-width: 600px){ .form-grid{ grid-template-columns: 1fr; } }
-
-.field label{
-  display:block;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 900;
-  color: rgba(255,255,255,.82);
-}
-
-.field input,
-.field textarea,
-.field select{
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
-  color: rgba(255,255,255,.92);
-  outline: none;
-  font: inherit;
-  display:block;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus{
-  border-color: rgba(255,255,255,.22);
-  box-shadow: 0 0 0 3px rgba(117,83,255,.20);
-}
-
-.field select{
-  cursor:pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, rgba(255,255,255,.85) 50%),
-    linear-gradient(135deg, rgba(255,255,255,.85) 50%, transparent 50%);
-  background-position:
-    calc(100% - 18px) 50%,
-    calc(100% - 12px) 50%;
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
-  padding-right: 38px;
-}
-.field select option{ color:#111; background:#fff; }
-
-/* disabled input */
-.field input:disabled{
-  opacity: 1;
-  cursor: not-allowed;
-  color: rgba(255,255,255,.82);
-  -webkit-text-fill-color: rgba(255,255,255,.82);
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.10);
-  box-shadow: none;
-}
-
-.req{ color:#ff6b6b; }
-
-/* =========================
-   OVERLAY ANIMASI (RAMAI DI MOBILE)
-   ========================= */
-.fx-overlay{
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0; /* di bawah konten */
-  overflow: hidden;
-}
-.fx-overlay::before{
-  content:"";
-  position:absolute; inset:-10%;
-  background:
-    radial-gradient(900px 480px at 18% 12%, rgba(117,83,255,.16), transparent 60%),
-    radial-gradient(850px 520px at 82% 18%, rgba(0,210,255,.12), transparent 62%),
-    radial-gradient(900px 620px at 65% 88%, rgba(0,255,200,.10), transparent 62%),
-    radial-gradient(1200px 900px at 50% 50%, rgba(0,0,0,.22), transparent 55%);
-  filter: blur(2px);
-  opacity: .95;
-}
-.fx-shimmer{
-  position:absolute;
-  inset:-40%;
-  background:
-    radial-gradient(closest-side, rgba(255,255,255,.10), transparent 70%),
-    linear-gradient(120deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
-  mix-blend-mode: screen;
-  opacity: .55;
-  animation: fxShimmer 12s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes fxShimmer{
-  0%{ transform: translate3d(-8%, -6%, 0) rotate(0deg); }
-  50%{ transform: translate3d(10%, 6%, 0) rotate(10deg); }
-  100%{ transform: translate3d(-8%, -6%, 0) rotate(0deg); }
-}
-.fx-particles{ position:absolute; inset:0; }
-.fx-p{
-  position:absolute;
-  width: var(--s, 10px);
-  height: var(--s, 10px);
-  border-radius: 999px;
-  left: var(--x, 50%);
-  top: var(--y, 50%);
-  opacity: var(--o, .35);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0) 55%),
-    radial-gradient(circle at 70% 70%, var(--c, rgba(117,83,255,.25)), rgba(0,0,0,0) 60%);
-  filter: blur(var(--b, 0px));
-  transform: translate3d(0,0,0);
-  animation: fxFloat var(--d, 9s) ease-in-out infinite;
-  will-change: transform, opacity;
-}
-@keyframes fxFloat{
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: var(--o, .35); }
-  50%  { transform: translate3d(var(--dx, 14px), var(--dy, -60px), 0) scale(1.08); opacity: calc(var(--o, .35) + .12); }
-  100% { transform: translate3d(0, 0, 0) scale(1); opacity: var(--o, .35); }
-}
-@media (max-width: 720px){
-  .fx-overlay::before{ opacity: 1; }
-  .fx-shimmer{ opacity: .70; }
-}
-@media (prefers-reduced-motion: reduce){
-  .fx-shimmer, .fx-p{ animation: none !important; }
-}
-</style>
-
+    /* =========================
+       OVERLAY GELEMBUNG + SHIMMER
+       ========================= */
+    .fx-overlay{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .fx-overlay::before{
+      content:"";
+      position:absolute; inset:-10%;
+      background:
+        radial-gradient(900px 480px at 18% 12%, rgba(117,83,255,.16), transparent 60%),
+        radial-gradient(850px 520px at 82% 18%, rgba(0,210,255,.12), transparent 62%),
+        radial-gradient(900px 620px at 65% 88%, rgba(0,255,200,.10), transparent 62%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(0,0,0,.22), transparent 55%);
+      filter: blur(2px);
+      opacity: .95;
+    }
+    .fx-shimmer{
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(closest-side, rgba(255,255,255,.10), transparent 70%),
+        linear-gradient(120deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
+      mix-blend-mode: screen;
+      opacity: .55;
+      animation: fxShimmer 12s ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes fxShimmer{
+      0%{ transform: translate3d(-8%, -6%, 0) rotate(0deg); }
+      50%{ transform: translate3d(10%, 6%, 0) rotate(10deg); }
+      100%{ transform: translate3d(-8%, -6%, 0) rotate(0deg); }
+    }
+    .fx-particles{ position:absolute; inset:0; }
+    .fx-p{
+      position:absolute;
+      width: var(--s, 10px);
+      height: var(--s, 10px);
+      border-radius: 999px;
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      opacity: var(--o, .35);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 70% 70%, var(--c, rgba(117,83,255,.25)), rgba(0,0,0,0) 60%);
+      filter: blur(var(--b, 0px));
+      transform: translate3d(0,0,0);
+      animation: fxFloat var(--d, 9s) ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes fxFloat{
+      0%   { transform: translate3d(0, 0, 0) scale(1); opacity: var(--o, .35); }
+      50%  { transform: translate3d(var(--dx, 14px), var(--dy, -60px), 0) scale(1.08); opacity: calc(var(--o, .35) + .12); }
+      100% { transform: translate3d(0, 0, 0) scale(1); opacity: var(--o, .35); }
+    }
+    @media (max-width: 720px){
+      .fx-overlay::before{ opacity: 1; }
+      .fx-shimmer{ opacity: .70; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .fx-shimmer, .fx-p{ animation: none !important; }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- NAV -->
   <header class="nav container" id="topNav">
     <div class="nav-inner glass">
       <a class="brand" href="#beranda" aria-label="Ke Beranda">
@@ -628,7 +502,6 @@ details[open] .chev{
       <nav class="nav-links" aria-label="Navigasi utama">
         <a href="#beranda">Beranda</a>
         <a href="#produk">Produk</a>
-        <a href="#service">Service</a>
         <a href="#faq">FAQ</a>
       </nav>
 
@@ -650,18 +523,18 @@ details[open] .chev{
     <div class="mobile glass" id="mobileMenu" aria-label="Menu mobile">
       <a href="#beranda">Beranda</a>
       <a href="#produk">Produk</a>
-      <a href="#service">Service</a>
       <a href="#faq">FAQ</a>
     </div>
   </header>
 
   <main class="container">
+    <!-- HERO -->
     <section class="hero" id="beranda">
       <div class="hero-grid">
         <div class="hero-card glass">
           <div class="kicker"><span class="dot"></span> Marketplace Aplikasi Premium • Garansi & Support</div>
           <h1>Jual Aplikasi Premium, Aman, dan Tepercaya.</h1>
-          <p class="sub">Pilih produk → isi format → langsung menuju WhatsApp admin.</p>
+          <p class="sub">Pilih produk → isi format → lanjut pembayaran QRIS → konfirmasi sudah bayar → kirim → WhatsApp admin.</p>
         </div>
 
         <aside class="showcase glass" aria-label="Highlight">
@@ -682,6 +555,7 @@ details[open] .chev{
       </div>
     </section>
 
+    <!-- PRODUK -->
     <section id="produk">
       <div class="section-head">
         <div>
@@ -694,34 +568,6 @@ details[open] .chev{
       <div class="grid" id="productGrid"></div>
     </section>
 
-    <!-- =========================
-         SERVICE SECTION
-    ========================== -->
-    <section id="service">
-      <div class="section-head">
-        <div>
-          <h2>Service</h2>
-          <p>Kami bantu dari awal sampai jalan. Fokus ke pengalaman premium & aman.</p>
-        </div>
-        <a class="btn primary" href="#produk">Pilih Produk</a>
-      </div>
-
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);">
-        <div class="card">
-          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">⚙</span> Instalasi & Setup</div>
-          <p style="margin:0;color:var(--muted);">Bantuan instalasi, konfigurasi, dan optimasi agar siap dipakai.</p>
-        </div>
-        <div class="card">
-          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">🔑</span> Aktivasi</div>
-          <p style="margin:0;color:var(--muted);">Panduan aktivasi jelas dan cepat sesuai paket yang dibeli.</p>
-        </div>
-        <div class="card">
-          <div style="font-weight:900;margin-bottom:6px;"><span class="icon">💬</span> Support</div>
-          <p style="margin:0;color:var(--muted);">Bantuan chat untuk kendala umum sesuai jam layanan.</p>
-        </div>
-      </div>
-    </section>
-
     <!-- FAQ -->
     <section id="faq">
       <div class="section-head">
@@ -732,121 +578,27 @@ details[open] .chev{
         <a class="btn" href="#beranda">Kembali ke atas</a>
       </div>
 
-      <div class="faq">
-        <details>
-          <summary>Bagaimana cara membeli? <span class="chev">+</span></summary>
-          <div class="answer">Pilih produk → klik “Beli Sekarang” → otomatis diarahkan ke WhatsApp admin.</div>
-        </details>
-
-        <details>
-          <summary>Kenapa produk tidak muncul? <span class="chev">+</span></summary>
-          <div class="answer">Pastikan <b>gambar ada</b> di folder img, dan tidak ada error JS di Console.</div>
-        </details>
-
-        <details>
-          <summary>Search bisa cari apa saja? <span class="chev">+</span></summary>
-          <div class="answer">Bisa cari dari Nama / Brand / Label / Tag / Durasi. Contoh: <b>netflix</b>, <b>1 bulan</b>.</div>
-        </details>
-
-        <details>
-          <summary>Metode pembayaran apa saja? <span class="chev">+</span></summary>
-          <div class="answer">Bisa transfer/QRIS sesuai admin.</div>
-        </details>
+      <div class="grid" style="grid-template-columns:repeat(2,1fr);">
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;">Bagaimana cara membeli?</div>
+          <p>Pilih produk → klik “Beli Sekarang” → isi format → lanjut bayar QRIS → pilih status bayar → kirim → WhatsApp.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;">Metode pembayaran?</div>
+          <p>QRIS saja. <b>Tanya stok ke admin dulu</b> sebelum bayar.</p>
+        </div>
       </div>
     </section>
 
-   <footer class="pk-footer">
-  <div class="pk-footer__inner container">
-
-    <div class="pk-footer__top">
-      <!-- LEFT BRAND -->
-      <div>
-        <div class="pk-footer__brandRow">
-          <span class="pk-footer__logo" aria-hidden="true">
-            <img src="img/logo.png" alt="">
-          </span>
-          <div class="pk-footer__name">Faxml Store</div>
-        </div>
-
-        <div class="pk-footer__miniTitle">Secured payment by</div>
-        <div class="pk-footer__pay">
-          <!-- ganti path logo sesuai punyamu -->
-          <img class="pk-footer__payLogo" src="img/tripay.webp" alt="Payment Logo"
-               onerror="this.style.display='none'">
-        </div>
-      </div>
-
-      <!-- COL 1 -->
-      <div class="pk-col">
-        <div class="pk-col__title">Products</div>
-        <div class="pk-links">
-          <a href="#produk">Harga</a>
-          <a href="#service">Services</a>
-          <a href="#produk">AI Tools</a>
-        </div>
-      </div>
-
-      <!-- COL 2 -->
-      <div class="pk-col">
-        <div class="pk-col__title">Profile</div>
-        <div class="pk-links">
-          <a href="#beranda">Tentang Kami</a>
-         <a id="footerKontak" href="#">Kontak</a>
-        </div>
-      </div>
-
-      <!-- COL 3 -->
-      <div class="pk-col">
-        <div class="pk-col__title">Legalitas</div>
-        <div class="pk-links">
-          <a href="#faq">Kebijakan Privasi</a>
-          <a href="#faq">Syarat &amp; Ketentuan</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="pk-divider"></div>
-
-    <div class="pk-footer__bottom">
-      <div class="pk-copy">© <span id="year"></span> Faxml Store.</div>
-
-      <div class="pk-badges">
-        <span class="pk-badge">
-          <!-- shield -->
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2l8 4v6c0 5-3.2 9.4-8 10-4.8-.6-8-5-8-10V6l8-4z" stroke="rgba(34,197,94,.95)" stroke-width="2"/>
-            <path d="M8.5 12.2l2.2 2.2 4.8-5" stroke="rgba(34,197,94,.95)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Secure Payment
-        </span>
-
-        <span class="pk-badge">
-          <!-- info -->
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="rgba(59,130,246,.95)" stroke-width="2"/>
-            <path d="M12 10v7" stroke="rgba(59,130,246,.95)" stroke-width="2" stroke-linecap="round"/>
-            <path d="M12 7h.01" stroke="rgba(59,130,246,.95)" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-          24/7 Support
-        </span>
-      </div>
-    </div>
-
-  </div>
-</footer>
-
-<!-- Floating chat button (WhatsApp) -->
-<a class="pk-chat" href="https://wa.me/6288221694607" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
-  <svg class="wa-ico" viewBox="0 0 448 512" aria-hidden="true">
-    <path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-67.1-156.9zM224 438.7c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.2-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.8 184.6-184.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.7z"/>
-  </svg>
-</a>
-
-</a>
-
+    <!-- Floating WA -->
+    <a class="pk-chat" href="https://wa.me/6288221694607" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
+      <svg class="wa-ico" viewBox="0 0 448 512" aria-hidden="true">
+        <path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-67.1-156.9zM224 438.7c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.2-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.8 184.6-184.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.7z"/>
+      </svg>
+    </a>
   </main>
 
-  <!-- MODAL -->
+  <!-- BUY MODAL -->
   <div id="buyModal" class="modal-overlay" aria-hidden="true">
     <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-header">
@@ -855,12 +607,6 @@ details[open] .chev{
       </div>
 
       <form id="buyForm" class="modal-body">
-        <input type="hidden" id="mProduct">
-        <input type="hidden" id="mBrand">
-        <input type="hidden" id="mPrice">
-        <input type="hidden" id="mDuration">
-        <input type="hidden" id="mType">
-
         <div class="form-grid">
           <div class="field" style="grid-column:1/-1">
             <label>Produk</label>
@@ -924,7 +670,7 @@ details[open] .chev{
               </div>
               <div class="field">
                 <label>keterangan <span class="req">*</span></label>
-                <input id="s_ket" type="text" placeholder="Contoh: kirim payment qris bang">
+                <input id="s_ket" type="text" placeholder="Contoh: request / catatan">
               </div>
             </div>
           </div>
@@ -1032,88 +778,135 @@ details[open] .chev{
 
       <div class="modal-footer">
         <button type="button" class="btn" id="cancelModal">Batal</button>
-        <button id="sendBtn" type="submit" class="btn primary" form="buyForm">Kirim</button>
+        <button id="sendBtn" type="submit" class="btn primary" form="buyForm">Lanjut Pembayaran</button>
       </div>
     </div>
   </div>
 
+ <!-- PAYMENT MODAL (QRIS) -->
+<div id="payModal" class="modal-overlay" aria-hidden="true">
+  <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+    <div class="modal-header">
+      <h3 id="payTitle">Pembayaran QRIS</h3>
+      <button id="closePay" class="modal-close" type="button">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- NOTIF DI ATAS (HANYA 1, JANGAN DOUBLE ID) -->
+      <div id="paidNotif"
+           style="display:none;margin-bottom:12px;padding:10px 12px;border-radius:12px;
+                  background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);
+                  color:rgba(255,255,255,.92);font-weight:900;font-size:13px;">
+        🔔 Pembayaran Berhasil (Klik <b>Lanjut WhatsApp</b>)
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="font-weight:900">Silakan bayar sesuai nominal:</div>
+        <div id="payAmount" style="font-size:22px;font-weight:900;"></div>
+
+        <div style="border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px;background:rgba(255,255,255,.04);">
+          <div style="font-weight:900; margin-bottom:6px;">⚠️ QRIS NOTE</div>
+          <div style="color:rgba(255,255,255,.78);font-weight:800;font-size:13px;line-height:1.6;">
+            • <b>Tanyakan stok ke admin dulu</b> sebelum melakukan pembayaran.<br>
+            • Setelah admin konfirmasi stok, baru lanjut bayar via QRIS.<br>
+            • Setelah bayar, pilih <b>Sudah</b> lalu klik <b>Kirim</b>.
+          </div>
+        </div>
+
+        <div style="border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px;background:rgba(255,255,255,.04);">
+          <img id="qrisImg" alt="QRIS"
+               style="width:100%;max-width:340px;display:block;margin:0 auto;border-radius:12px;">
+          <div style="margin-top:10px;color:rgba(255,255,255,.75);font-weight:800;font-size:13px;line-height:1.6;">
+            Scan QRIS → pilih status bayar → klik <b>“Kirim”</b> untuk konfirmasi (notif muncul) → klik <b>“Lanjut WhatsApp”</b>.
+          </div>
+
+          <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;">
+            <a id="qrisHref" class="btn" href="#" target="_blank" rel="noopener">Buka QRIS</a>
+            <button id="askStockBtn" type="button" class="btn">Tanya stok</button>
+          </div>
+        </div>
+
+        <!-- KONFIRMASI SUDAH BAYAR -->
+        <div class="field">
+          <label>Apakah sudah bayar? <span class="req">*</span></label>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:900;">
+              <input type="radio" name="paidStatus" id="paidYes" value="yes">
+              Sudah
+            </label>
+
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:900;">
+              <input type="radio" name="paidStatus" id="paidNo" value="no" checked>
+              Belum
+            </label>
+          </div>
+
+          <small style="display:block;margin-top:8px;color:rgba(255,255,255,.70);font-weight:800;line-height:1.5;">
+            Pilih <b>Sudah</b> jika kamu sudah scan QRIS, lalu klik <b>Kirim</b>.
+          </small>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn" id="backToForm">Kembali</button>
+      <button type="button" class="btn primary" id="sendPaid" disabled>Kirim</button>
+    </div>
+  </div>
+</div>
+
+
   <script>
-(() => {
-  const rand = (a,b)=>Math.random()*(b-a)+a;
-  function build(wrap){
-    const isMobile = (innerWidth||360) <= 720;
-    const count = isMobile ? 36 : 18;
-    const colors = ["rgba(117,83,255,.35)","rgba(0,210,255,.28)","rgba(0,255,200,.22)","rgba(255,255,255,.18)"];
-    for(let i=0;i<count;i++){
-      const p=document.createElement("span"); p.className="fx-p";
-      p.style.setProperty("--s",(isMobile?rand(7,18):rand(8,20))+"px");
-      p.style.setProperty("--b",rand(0,2.2)+"px");
-      p.style.setProperty("--x",rand(2,98).toFixed(2)+"%");
-      p.style.setProperty("--y",rand(2,98).toFixed(2)+"%");
-      p.style.setProperty("--dx",rand(-18,18).toFixed(0)+"px");
-      p.style.setProperty("--dy",(-rand(40,isMobile?95:75)).toFixed(0)+"px");
-      p.style.setProperty("--d",rand(isMobile?6.5:8, isMobile?11:13).toFixed(2)+"s");
-      p.style.setProperty("--o",rand(0.18,isMobile?0.42:0.34).toFixed(2));
-      p.style.setProperty("--c",colors[Math.floor(rand(0,colors.length))]);
-      p.style.animationDelay = rand(-10,0).toFixed(2)+"s";
-      wrap.appendChild(p);
-    }
-  }
-  function mount(){
-    if(document.querySelector(".fx-overlay")) return;
-    const o=document.createElement("div"); o.className="fx-overlay";
-    const s=document.createElement("div"); s.className="fx-shimmer";
-    const p=document.createElement("div"); p.className="fx-particles";
-    o.appendChild(s); o.appendChild(p);
-    document.body.prepend(o);
-    build(p);
-  }
-  addEventListener("DOMContentLoaded", mount);
-})();
-
-
-(() => {
-  const rand = (a,b)=>Math.random()*(b-a)+a;
-  function build(wrap){
-    const isMobile = (innerWidth||360) <= 720;
-    const count = isMobile ? 36 : 18;
-    const colors = ["rgba(117,83,255,.35)","rgba(0,210,255,.28)","rgba(0,255,200,.22)","rgba(255,255,255,.18)"];
-    for(let i=0;i<count;i++){
-      const p=document.createElement("span"); p.className="fx-p";
-      p.style.setProperty("--s",(isMobile?rand(7,18):rand(8,20))+"px");
-      p.style.setProperty("--b",rand(0,2.2)+"px");
-      p.style.setProperty("--x",rand(2,98).toFixed(2)+"%");
-      p.style.setProperty("--y",rand(2,98).toFixed(2)+"%");
-      p.style.setProperty("--dx",rand(-18,18).toFixed(0)+"px");
-      p.style.setProperty("--dy",(-rand(40,isMobile?95:75)).toFixed(0)+"px");
-      p.style.setProperty("--d",rand(isMobile?6.5:8, isMobile?11:13).toFixed(2)+"s");
-      p.style.setProperty("--o",rand(0.18,isMobile?0.42:0.34).toFixed(2));
-      p.style.setProperty("--c",colors[Math.floor(rand(0,colors.length))]);
-      p.style.animationDelay = rand(-10,0).toFixed(2)+"s";
-      wrap.appendChild(p);
-    }
-  }
-  function mount(){
-    if(document.querySelector(".fx-overlay")) return;
-    const o=document.createElement("div"); o.className="fx-overlay";
-    const s=document.createElement("div"); s.className="fx-shimmer";
-    const p=document.createElement("div"); p.className="fx-particles";
-    o.appendChild(s); o.appendChild(p);
-    document.body.prepend(o);
-    build(p);
-  }
-  addEventListener("DOMContentLoaded", mount);
-})();
+    /* =========================
+       OVERLAY GELEMBUNG (1x saja)
+    ========================= */
+    (() => {
+      const rand = (a,b)=>Math.random()*(b-a)+a;
+      function build(wrap){
+        const isMobile = (innerWidth||360) <= 720;
+        const count = isMobile ? 36 : 18;
+        const colors = ["rgba(117,83,255,.35)","rgba(0,210,255,.28)","rgba(0,255,200,.22)","rgba(255,255,255,.18)"];
+        for(let i=0;i<count;i++){
+          const p=document.createElement("span"); p.className="fx-p";
+          p.style.setProperty("--s",(isMobile?rand(7,18):rand(8,20))+"px");
+          p.style.setProperty("--b",rand(0,2.2)+"px");
+          p.style.setProperty("--x",rand(2,98).toFixed(2)+"%");
+          p.style.setProperty("--y",rand(2,98).toFixed(2)+"%");
+          p.style.setProperty("--dx",rand(-18,18).toFixed(0)+"px");
+          p.style.setProperty("--dy",(-rand(40,isMobile?95:75)).toFixed(0)+"px");
+          p.style.setProperty("--d",rand(isMobile?6.5:8, isMobile?11:13).toFixed(2)+"s");
+          p.style.setProperty("--o",rand(0.18,isMobile?0.42:0.34).toFixed(2));
+          p.style.setProperty("--c",colors[Math.floor(rand(0,colors.length))]);
+          p.style.animationDelay = rand(-10,0).toFixed(2)+"s";
+          wrap.appendChild(p);
+        }
+      }
+      function mount(){
+        if(document.querySelector(".fx-overlay")) return;
+        const o=document.createElement("div"); o.className="fx-overlay";
+        const s=document.createElement("div"); s.className="fx-shimmer";
+        const p=document.createElement("div"); p.className="fx-particles";
+        o.appendChild(s); o.appendChild(p);
+        document.body.prepend(o);
+        build(p);
+      }
+      addEventListener("DOMContentLoaded", mount);
+    })();
 
     // helpers
     const qs = (q) => document.querySelector(q);
-    const qsa = (q) => document.querySelectorAll(q);
     const normalize = (str) => (str ?? "").toString().toLowerCase().trim();
     const requireVal = (v) => (v || "").toString().trim();
 
     // WhatsApp
     const WA_NUMBER = "6288221694607";
     const waLink = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+
+    // QRIS image (taruh file: img/qris.jpeg)
+    const QRIS_IMAGE_URL = "img/qris.jpeg";
 
     const formatRupiah = (n) => {
       const num = Number(n) || 0;
@@ -1125,10 +918,6 @@ details[open] .chev{
       const dd = String(d.getDate()).padStart(2,"0");
       return `${d.getFullYear()}-${mm}-${dd}`;
     };
-
-    // footer year
-    const yearNow = qs("#yearNow");
-    if (yearNow) yearNow.textContent = new Date().getFullYear();
 
     // mobile menu
     const hamburger = qs("#hamburger");
@@ -1166,8 +955,7 @@ details[open] .chev{
       { brand:"gemini",  label:"GEMINI",  name:"GEMINI PRO + GDRIVE 2TB + Veo3", duration:"1 Bulan", price:10000, stock:20, tag:"Populer", img:"img/gemini.png" },
 
       { brand:"canva",   label:"CANVA",   name:"Canva Premium Team", duration:"1 Bulan", price:6000,  stock:50, tag:"Team", img:"img/canva.png" },
-      { brand:"canva",   label:"CANVA",   name:"Canva Premium lifetime", duration:"1 Tahun", price:22000,  stock:50, tag:"Team", img:"img/canva.png" },
-      { brand:"canva",   label:"CANVA",   name:"Canva Premium Team (Plus)", duration:"1 Tahun", price:20000, stock:20, tag:"Team", img:"img/canva.png" },
+      { brand:"canva",   label:"CANVA",   name:"Canva Premium Team (Plus)", duration:"1 Bulan", price:15000, stock:20, tag:"Team", img:"img/canva.png" },
 
       { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Famplan", duration:"1 Bulan", price:26000, stock:10, tag:"Ready", img:"img/spotify.png" },
       { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Indplan", duration:"1 Bulan", price:28000, stock:10, tag:"Ready", img:"img/spotify.png" },
@@ -1176,7 +964,7 @@ details[open] .chev{
       { brand:"youtube", label:"YOUTUBE", name:"YouTube Premium Indplan", duration:"1 Bulan", price:15000, stock:10, tag:"Populer", img:"img/youtube.png" },
 
       { brand:"alight",  label:"ALIGHT",  name:"Alight Motion Premium", duration:"1 Tahun", price:10000, stock:100, tag:"Populer", img:"img/alightmotion.png" },
-      { brand:"alight",  label:"Tutor AM",  name:"Tutor Alight Motion", duration:"Seumurhidup", price:80000, stock:100, tag:"Populer", img:"img/tutoram.png" },
+      { brand:"Tutor AM",  label:"Tutor AM",  name:"Tutor Alight Motion", duration:"Seumurhidup", price:80000, stock:100, tag:"Populer", img:"img/tutoram.png" },
 
       { brand:"wink",  label:"WINK", name:"Wink Premium Private Android", duration:"7 Hari", price:10000, stock:10, tag:"Populer", img:"img/wink.png" },
 
@@ -1204,7 +992,6 @@ details[open] .chev{
       { brand:"picsart", label:"PICSART", name:"Picsart Premium Private", duration:"1 Bulan", price:14000, stock:20, tag:"Original", img:"img/picsart.png" },
     ];
 
-    // render
     function renderProducts(list) {
       const productGrid = qs("#productGrid");
       if (!productGrid) return;
@@ -1256,7 +1043,6 @@ details[open] .chev{
     // search
     const searchInput = qs("#searchInput");
     const searchClear = qs("#searchClear");
-
     function applySearch(q) {
       const query = normalize(q);
       const filtered = !query ? products : products.filter((p) => {
@@ -1274,34 +1060,33 @@ details[open] .chev{
     searchInput?.addEventListener("input", (e) => setSearchValue(e.target.value));
     searchClear?.addEventListener("click", () => setSearchValue(""));
 
-    // modal logic
+    // modal buy
     const buyModal = qs("#buyModal");
     const closeModal = qs("#closeModal");
     const cancelModal = qs("#cancelModal");
     const buyForm = qs("#buyForm");
 
-    const mProduct = qs("#mProduct");
-    const mBrand = qs("#mBrand");
-    const mPrice = qs("#mPrice");
-    const mDuration = qs("#mDuration");
-    const mType = qs("#mType");
     const mPreview = qs("#mPreview");
-
     const f_tgl = qs("#f_tgl");
     const f_durasi = qs("#f_durasi");
 
+    // disable input blok yang tidak aktif
     const blocks = ["netflix","sharing","private","youtube","canva","spotify","alight"];
     function showBlock(type){
       blocks.forEach((k) => {
         const el = qs("#block_" + k);
-        if (el) el.style.display = (k === type) ? "block" : "none";
+        if (!el) return;
+        const isActive = (k === type);
+        el.style.display = isActive ? "block" : "none";
+        el.querySelectorAll("input, select, textarea, button").forEach((inp) => {
+          inp.disabled = !isActive;
+        });
       });
     }
 
     function detectType(productName, brand) {
       const n = normalize(productName);
       const b = normalize(brand);
-
       if (b.includes("netflix") || n.includes("netflix")) return "netflix";
       if (b.includes("youtube") || n.includes("youtube")) return "youtube";
       if (b.includes("canva") || n.includes("canva")) return "canva";
@@ -1311,21 +1096,26 @@ details[open] .chev{
       return "sharing";
     }
 
+    let selectedOrder = { product:"", brand:"", price:0, duration:"", type:"" };
+    let waFinalMessage = "";
+
     function openBuyModal({ product, brand, price, duration }) {
       const type = detectType(product, brand);
+      selectedOrder = {
+        product: product || "",
+        brand: brand || "",
+        price: Number(price) || 0,
+        duration: duration || "",
+        type
+      };
 
-      mProduct.value = product || "";
-      mBrand.value = brand || "";
-      mPrice.value = price || "";
-      mDuration.value = duration || "";
-      mType.value = type;
+      if (mPreview) mPreview.value = `${selectedOrder.product} • ${selectedOrder.duration} • ${formatRupiah(selectedOrder.price)}`;
+      if (f_tgl) f_tgl.value = todayISO();
+      if (f_durasi) f_durasi.value = selectedOrder.duration || "";
 
-      mPreview.value = `${product} • ${duration} • ${formatRupiah(price)}`;
-      f_tgl.value = todayISO();
-      f_durasi.value = duration || "";
-
-      const s_apk = qs("#s_apk"); if (s_apk) s_apk.value = product || "";
-      const p_apk = qs("#p_apk"); if (p_apk) p_apk.value = product || "";
+      // auto isi nama apk
+      const s_apk = qs("#s_apk"); if (s_apk) s_apk.value = selectedOrder.product;
+      const p_apk = qs("#p_apk"); if (p_apk) p_apk.value = selectedOrder.product;
 
       showBlock(type);
 
@@ -1337,12 +1127,13 @@ details[open] .chev{
       buyModal.classList.remove("show");
       buyModal.setAttribute("aria-hidden", "true");
       buyForm.reset();
+      selectedOrder = { product:"", brand:"", price:0, duration:"", type:"" };
+      waFinalMessage = "";
     }
 
     document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-buy]");
       if (!btn) return;
-
       openBuyModal({
         product: btn.getAttribute("data-product"),
         brand: btn.getAttribute("data-brand"),
@@ -1354,131 +1145,342 @@ details[open] .chev{
     closeModal?.addEventListener("click", closeBuyModal);
     cancelModal?.addEventListener("click", closeBuyModal);
     buyModal?.addEventListener("click", (e) => { if (e.target === buyModal) closeBuyModal(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && buyModal?.classList.contains("show")) closeBuyModal(); });
 
-    // submit -> WhatsApp
+    // =========================
+// PAYMENT MODAL (FINAL 2-STEP)
+// =========================
+const payModal = qs("#payModal");
+const closePay = qs("#closePay");
+const backToForm = qs("#backToForm");
+const sendPaid = qs("#sendPaid");
+const payAmount = qs("#payAmount");
+const qrisImg = qs("#qrisImg");
+const qrisHref = qs("#qrisHref");
+const askStockBtn = qs("#askStockBtn");
+
+const paidYes = qs("#paidYes");
+const paidNo = qs("#paidNo");
+const paidNotif = qs("#paidNotif");
+
+let waReadyToOpen = false; // klik 1 notif, klik 2 WA
+
+function resetPayUI() {
+  waReadyToOpen = false;
+  if (paidNotif) paidNotif.style.display = "none";
+  if (sendPaid) {
+    sendPaid.textContent = "Kirim";
+    sendPaid.disabled = !(paidYes?.checked === true);
+  }
+}
+
+function syncSendPaidState() {
+  const isPaid = (paidYes?.checked === true);
+
+  // kalau belum tahap lanjut WA, tombol ikut radio
+  if (!waReadyToOpen && sendPaid) {
+    sendPaid.disabled = !isPaid;
+  }
+
+  // kalau user pindah ke "Belum", reset semua
+  if (!isPaid) {
+    waReadyToOpen = false;
+    if (paidNotif) paidNotif.style.display = "none";
+    if (sendPaid) {
+      sendPaid.textContent = "Kirim";
+      sendPaid.disabled = true;
+    }
+  }
+}
+
+paidYes?.addEventListener("change", syncSendPaidState);
+paidNo?.addEventListener("change", syncSendPaidState);
+
+function openPayModal() {
+  if (payAmount) payAmount.textContent = formatRupiah(selectedOrder.price);
+
+  if (qrisImg) qrisImg.src = QRIS_IMAGE_URL;
+  if (qrisHref) qrisHref.href = QRIS_IMAGE_URL;
+
+  // reset saat modal dibuka
+  if (paidNo) paidNo.checked = true;
+  resetPayUI();
+  syncSendPaidState();
+
+  payModal.classList.add("show");
+  payModal.setAttribute("aria-hidden", "false");
+}
+
+function closePayModal() {
+  payModal.classList.remove("show");
+  payModal.setAttribute("aria-hidden", "true");
+
+  if (paidNo) paidNo.checked = true;
+  resetPayUI();
+  syncSendPaidState();
+}
+
+closePay?.addEventListener("click", closePayModal);
+payModal?.addEventListener("click", (e) => { if (e.target === payModal) closePayModal(); });
+
+backToForm?.addEventListener("click", () => {
+  closePayModal();
+  buyModal.classList.add("show");
+  buyModal.setAttribute("aria-hidden", "false");
+});
+
+askStockBtn?.addEventListener("click", () => {
+  if (!selectedOrder.product) return alert("Pilih produk dulu.");
+  const msg =
+`Halo admin, saya mau tanya stok dulu ya ✅
+
+Produk: ${selectedOrder.product}
+Durasi: ${selectedOrder.duration}
+Harga: ${formatRupiah(selectedOrder.price)}
+
+Apakah stok ready?`;
+  window.open(waLink(msg), "_blank", "noopener,noreferrer");
+});
+
+// klik "Kirim" (1x notif), klik lagi (2x WA)
+sendPaid?.addEventListener("click", () => {
+  if (!waFinalMessage) return alert("Data order belum ada. Isi format dulu.");
+
+  const isPaid = (paidYes?.checked === true);
+  if (!isPaid) return;
+
+  // KLIK 1: tampil notif, jangan WA dulu
+  if (!waReadyToOpen) {
+    if (paidNotif) paidNotif.style.display = "block";
+
+    const body = payModal?.querySelector(".modal-body");
+    if (body) body.scrollTo({ top: 0, behavior: "smooth" });
+
+    waReadyToOpen = true;
+
+    if (sendPaid) {
+      sendPaid.textContent = "Lanjut WhatsApp";
+      sendPaid.disabled = false;
+    }
+    return;
+  }
+
+  // KLIK 2: baru ke WhatsApp
+  const finalMsg =
+`${waFinalMessage}
+
+🔔 *Konfirmasi pembayaran:* SUDAH BAYAR
+⏳ Status: Menunggu admin proses.`.trim();
+
+  window.open(waLink(finalMsg), "_blank", "noopener,noreferrer");
+  closePayModal();
+  closeBuyModal();
+});
+
+
+    // submit BUY FORM -> payment modal
     buyForm?.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const type = mType.value;
+      const type = selectedOrder.type || "sharing";
       const tgl = requireVal(f_tgl.value);
       const durasi = requireVal(f_durasi.value);
       if (!tgl || !durasi) return alert("Harap isi tgl order & durasi (*)");
 
+      const hargaTxt = formatRupiah(selectedOrder.price);
+      const basePayNote =
+`⚠️ Sebelum bayar: *tanyakan stok ke admin dulu!*
+Metode pembayaran: *QRIS*
+Nominal: *${hargaTxt}*`;
+
       let msg = "";
 
       if (type === "netflix") {
-        const merk = requireVal(qs("#n_merk").value);
-        const lokasi = requireVal(qs("#n_lokasi").value);
-        const tipe = requireVal(qs("#n_tipe").value);
+        const merk = requireVal(qs("#n_merk")?.value);
+        const lokasi = requireVal(qs("#n_lokasi")?.value);
+        const tipe = requireVal(qs("#n_tipe")?.value);
         if (!merk || !lokasi || !tipe) return alert("Harap isi semua field wajib (*)");
 
         msg =
 `*Format Netflix*
 
+*🐣* produk : ${selectedOrder.product}
 *🐣* tgl order : ${tgl}
 *🐣* durasi : ${durasi}
+*🐣* harga : ${hargaTxt}
 *🐣* merk hp : ${merk}
 *🐣* lokasi : ${lokasi}
-*🐣* 1u/2u/semipriv/priv : ${tipe}`;
+*🐣* 1u/2u/semipriv/priv : ${tipe}
+
+${basePayNote}`;
       }
       else if (type === "youtube") {
-        const plan = requireVal(qs("#y_plan").value);
-        const email = requireVal(qs("#y_email").value);
-        const pass = requireVal(qs("#y_pass").value);
+        const plan = requireVal(qs("#y_plan")?.value);
+        const email = requireVal(qs("#y_email")?.value);
+        const pass = requireVal(qs("#y_pass")?.value);
         if (!plan || !email) return alert("Harap isi semua field wajib (*)");
         if (plan === "indplan" && !pass) return alert("Indplan wajib isi password");
 
         msg =
 `•┈  *format youtube* ┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* durasi : ${durasi}
+*𔘓* harga : ${hargaTxt}
 *𔘓* email : ${email}
 *𔘓* password : ${pass || "-"}
-*𔘓* famplan/indplan : ${plan}`;
+*𔘓* famplan/indplan : ${plan}
+
+${basePayNote}`;
       }
       else if (type === "canva") {
-        const email = requireVal(qs("#c_email").value);
-        const design = requireVal(qs("#c_design").value);
+        const email = requireVal(qs("#c_email")?.value);
+        const design = requireVal(qs("#c_design")?.value);
         if (!email || !design) return alert("Harap isi semua field wajib (*)");
 
         msg =
 `•┈  *format canva* ┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* durasi : ${durasi}
+*𔘓* harga : ${hargaTxt}
 *𔘓* email : ${email}
-*𔘓* design/no : ${design}`;
+*𔘓* design/no : ${design}
+
+${basePayNote}`;
       }
       else if (type === "spotify") {
-        const plan = requireVal(qs("#sp_plan").value);
-        const email = requireVal(qs("#sp_email").value);
-        const pass = requireVal(qs("#sp_pass").value);
+        const plan = requireVal(qs("#sp_plan")?.value);
+        const email = requireVal(qs("#sp_email")?.value);
+        const pass = requireVal(qs("#sp_pass")?.value);
         if (!plan || !email || !pass) return alert("Harap isi semua field wajib (*)");
 
         msg =
 `•┈  *format spotify* ┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* durasi : ${durasi}
+*𔘓* harga : ${hargaTxt}
 *𔘓* email : ${email}
 *𔘓* password: ${pass}
-*𔘓* famplan/indplan : ${plan}`;
+*𔘓* famplan/indplan : ${plan}
+
+${basePayNote}`;
       }
       else if (type === "alight") {
-        const pass = requireVal(qs("#a_pass").value);
-        const note = requireVal(qs("#a_note").value);
+        const pass = requireVal(qs("#a_pass")?.value);
+        const note = requireVal(qs("#a_note")?.value);
         if (!pass) return alert("Harap isi password (*)");
 
         msg =
 `•┈  *format alightmotion* ┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* durasi : 1 tahun
+*𔘓* harga : ${hargaTxt}
 *𔘓* password : ${pass}
 
 • email wajib fresh no verif
-${note ? "• catatan : " + note : ""}`.trim();
+${note ? "• catatan : " + note : ""}
+
+${basePayNote}`.trim();
       }
       else if (type === "private") {
-        const apk = requireVal(qs("#p_apk").value);
-        const ket = requireVal(qs("#p_ket").value);
+        const apk = requireVal(qs("#p_apk")?.value);
+        const ket = requireVal(qs("#p_ket")?.value);
         if (!apk || !ket) return alert("Harap isi semua field wajib (*)");
 
         msg =
 `•┈ *format app private*┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* nama apk : ${apk}
 *𔘓* durasi : ${durasi}
+*𔘓* harga : ${hargaTxt}
 *𔘓* email : admin yang isi
 *𔘓* password : admin yang isi
-*𔘓* keterangan : ${ket}`;
+*𔘓* keterangan : ${ket}
+
+${basePayNote}`;
       }
       else { // sharing
-        const apk = requireVal(qs("#s_apk").value);
-        const device = requireVal(qs("#s_device").value);
-        const lokasi = requireVal(qs("#s_lokasi").value);
-        const ket = requireVal(qs("#s_ket").value);
+        const apk = requireVal(qs("#s_apk")?.value);
+        const device = requireVal(qs("#s_device")?.value);
+        const lokasi = requireVal(qs("#s_lokasi")?.value);
+        const ket = requireVal(qs("#s_ket")?.value);
         if (!apk || !device || !lokasi || !ket) return alert("Harap isi semua field wajib (*)");
 
         msg =
 `•┈  *format app sharing* ┈•
 
+*𔘓* produk : ${selectedOrder.product}
 *𔘓* tgl order : ${tgl}
 *𔘓* nama apk : ${apk}
 *𔘓* durasi : ${durasi}
+*𔘓* harga : ${hargaTxt}
 *𔘓* device : ${device}
 *𔘓* lokasi : ${lokasi}
-*𔘓* keterangan : ${ket}`;
+*𔘓* keterangan : ${ket}
+
+${basePayNote}`;
       }
 
-      window.open(waLink(msg), "_blank", "noopener,noreferrer");
-      closeBuyModal();
+      waFinalMessage = msg;
+
+      buyModal.classList.remove("show");
+      buyModal.setAttribute("aria-hidden", "true");
+      openPayModal();
     });
 
-    // init aman
+    // klik "Kirim" -> notif + WA (tanpa upload bukti)
+  // =====================================
+// KLIK 1: TAMPILKAN NOTIF (tidak ke WA)
+// KLIK 2: BARU BUKA WHATSAPP
+// =====================================
+let stepToWA = 0; // 0 = belum, 1 = siap ke WA
+
+sendPaid?.addEventListener("click", () => {
+  if (!waFinalMessage) return alert("Data order belum ada. Isi format dulu.");
+
+  const isPaid = paidYes?.checked === true;
+  if (!isPaid) return;
+
+  // KLIK PERTAMA: tampilkan notif dulu
+  if (stepToWA === 0) {
+    if (paidNotif) paidNotif.style.display = "block";
+
+    // scroll ke atas biar notif kebaca
+    const body = payModal?.querySelector(".modal-body");
+    if (body) body.scrollTo({ top: 0, behavior: "smooth" });
+
+    stepToWA = 1;                 // next klik baru ke WA
+    sendPaid.textContent = "Lanjut WhatsApp";
+    return;
+  }
+
+  // KLIK KEDUA: baru buka WA
+  const finalMsg =
+`${waFinalMessage}
+
+🔔 *Konfirmasi pembayaran:* SUDAH BAYAR
+⏳ Status: Menunggu admin proses.`.trim();
+
+  window.open(waLink(finalMsg), "_blank", "noopener,noreferrer");
+  closePayModal();
+  closeBuyModal();
+
+  // reset
+  stepToWA = 0;
+  if (sendPaid) sendPaid.textContent = "Kirim";
+});
+
+
+
+    // init
     document.addEventListener("DOMContentLoaded", () => {
       renderProducts(products);
       applySearch("");
