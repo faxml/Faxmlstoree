@@ -451,7 +451,7 @@ section{ padding:18px 0 24px; }
   font-weight:900;
   font-size:14px;
   color:rgba(255,255,255,.86);
-  white-space:nowrap;   /* IMPORTANT */
+  white-space:nowrap;
   word-break:normal;
 }
 .radio-item:has(input[type="radio"]:checked){
@@ -608,6 +608,225 @@ section{ padding:18px 0 24px; }
   border: 1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.03);
 }
+
+/* =========================
+   HERO - FLOATING SMALL APP ICONS (VERSI SEBELUMNYA)
+   ========================= */
+.hero-card{ position:relative; overflow:hidden; }
+
+.app-float-wrap{
+  position:absolute;
+  right:16px;
+  top:90px;
+  width:160px;
+  height:140px;
+  pointer-events:none;
+  z-index:1;
+  opacity:.75;
+}
+
+.hero-card .kicker,
+.hero-card h1,
+.hero-card .sub{ position:relative; z-index:2; }
+
+.app-float{
+  position:absolute;
+  width:26px; height:26px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+  display:grid; place-items:center;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+  overflow:hidden;
+  will-change:transform,opacity;
+}
+
+.app-float img{
+  width:76%; height:76%;
+  object-fit:contain;
+  display:block;
+}
+
+@keyframes appDrift{
+  0%,100%{ transform:translate3d(0,0,0) rotate(var(--rot)); opacity:var(--op); }
+  50%{ transform:translate3d(var(--dx),var(--dy),0) rotate(calc(var(--rot) + 8deg)); opacity:calc(var(--op) - .12); }
+}
+
+.app-float.a1{ left:92px; top:6px;   --dx:6px;  --dy:-10px; --rot:-10deg; --op:.60; animation:appDrift 4.8s ease-in-out infinite; }
+.app-float.a2{ left:124px;top:26px;  --dx:-8px; --dy:-12px; --rot:10deg;  --op:.52; animation:appDrift 5.6s ease-in-out infinite; }
+.app-float.a3{ left:70px; top:30px;  --dx:8px;  --dy:-10px; --rot:-6deg;  --op:.55; animation:appDrift 4.4s ease-in-out infinite; }
+.app-float.a4{ left:108px;top:56px;  --dx:-6px; --dy:-10px; --rot:12deg;  --op:.48; animation:appDrift 6.0s ease-in-out infinite; }
+.app-float.a5{ left:40px; top:14px;  --dx:7px;  --dy:-12px; --rot:6deg;   --op:.45; animation:appDrift 6.3s ease-in-out infinite; }
+.app-float.a6{ left:18px; top:50px;  --dx:-7px; --dy:-9px;  --rot:-12deg; --op:.42; animation:appDrift 5.0s ease-in-out infinite; }
+.app-float.a7{ left:56px; top:72px;  --dx:6px;  --dy:-10px; --rot:10deg;  --op:.40; animation:appDrift 6.8s ease-in-out infinite; }
+.app-float.a8{ left:132px;top:84px;  --dx:8px;  --dy:-10px; --rot:-8deg;  --op:.38; animation:appDrift 5.2s ease-in-out infinite; }
+
+@media (max-width:640px){
+  .app-float-wrap{ right:12px; top:110px; width:140px; height:120px; opacity:.85; }
+  .app-float{ width:22px; height:22px; border-radius:8px; }
+}
+@media (max-width: 380px){
+  .app-float-wrap{
+    display:block;
+    right:10px;
+    top:100px;
+    width:120px;
+    height:110px;
+    opacity:.9;
+  }
+  .app-float{
+    width:20px;
+    height:20px;
+    border-radius:7px;
+  }
+}
+@media (prefers-reduced-motion: reduce){ .app-float{ animation:none!important; } }
+
+/* =========================
+   SERVICE + FAQ (Accordion) + FOOTER (SAMA SEPERTI SCREENSHOT)
+   ========================= */
+.service-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:14px;
+}
+@media (max-width: 980px){
+  .service-grid{ grid-template-columns: 1fr; }
+}
+
+.faq-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px;
+}
+@media (max-width: 980px){
+  .faq-grid{ grid-template-columns: 1fr; }
+}
+.faq-item{ padding:0; }
+.faq-btn{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 14px;
+  border-radius: var(--radius);
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  cursor:pointer;
+  font: inherit;
+  color: var(--text);
+  font-weight:900;
+  text-align:left;
+}
+.faq-btn:hover{
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+}
+.faq-ico{
+  width:34px; height:34px;
+  border-radius: 12px;
+  display:grid; place-items:center;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  flex:0 0 auto;
+  font-weight:900;
+}
+.faq-panel{
+  display:none;
+  padding: 0 14px 14px 14px;
+  color: var(--muted);
+  line-height:1.65;
+  font-weight:800;
+}
+.faq-item.open .faq-panel{ display:block; }
+.faq-item.open .faq-ico{
+  background: rgba(117,83,255,.14);
+  border-color: rgba(117,83,255,.35);
+}
+
+.footer-wrap{
+  margin-top: 28px;
+  padding: 18px;
+  border-radius: var(--radius2);
+}
+.footer-top{
+  display:grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+@media (max-width: 980px){
+  .footer-top{ grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px){
+  .footer-top{ grid-template-columns: 1fr; }
+}
+.f-brand{ display:flex; gap:12px; align-items:flex-start; }
+.f-logo{
+  width:44px; height:44px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.16);
+  overflow:hidden;
+  flex:0 0 auto;
+  background: rgba(255,255,255,.06);
+}
+.f-logo img{ width:100%; height:100%; object-fit:cover; display:block; }
+.f-title{ font-weight:900; font-size:18px; margin:0 0 8px; }
+.f-note{ margin:0; color: var(--muted); font-weight:800; font-size:13px; line-height:1.6; }
+.f-col h4{
+  margin: 2px 0 10px;
+  font-size:12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.75);
+  font-weight:900;
+}
+.f-links a{
+  display:block;
+  padding:8px 0;
+  color: rgba(255,255,255,.72);
+  font-weight:900;
+}
+.f-links a:hover{ color: var(--text); }
+.footer-line{
+  margin:14px 0;
+  height:1px;
+  background: rgba(255,255,255,.10);
+}
+.footer-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+  color: rgba(255,255,255,.72);
+  font-weight:900;
+}
+.footer-badges{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.f-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.80);
+  font-weight:900;
+}
+.f-badge span{
+  width:22px; height:22px;
+  border-radius: 8px;
+  display:grid; place-items:center;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+}
 </style>
 </head>
 
@@ -654,8 +873,21 @@ section{ padding:18px 0 24px; }
     <!-- HERO -->
     <section class="hero" id="beranda">
       <div class="hero-grid">
-        <div class="hero-card glass">
+        <div class="hero-card glass hero-anim">
           <div class="kicker"><span class="dot"></span> Marketplace Aplikasi Premium • Garansi & Support</div>
+
+          <!-- FLOATING APP ICONS (BANYAK, KECIL) -->
+          <div class="app-float-wrap" aria-hidden="true">
+            <span class="app-float a1"><img src="img/logonet.png" alt=""></span>
+            <span class="app-float a2"><img src="img/logocap.png" alt=""></span>
+            <span class="app-float a3"><img src="img/logocap.png" alt=""></span>
+            <span class="app-float a4"><img src="img/logocap.png" alt=""></span>
+            <span class="app-float a5"><img src="img/logonet.png" alt=""></span>
+            <span class="app-float a6"><img src="img/logocap.png" alt=""></span>
+            <span class="app-float a7"><img src="img/logonet.png" alt=""></span>
+            <span class="app-float a8"><img src="img/logonet.png" alt=""></span>
+          </div>
+
           <h1>Jual Aplikasi Premium, Aman, dan Tepercaya.</h1>
           <p class="sub">Pilih produk → isi format → lanjut pembayaran QRIS → konfirmasi sudah bayar → kirim → WhatsApp admin.</p>
         </div>
@@ -691,7 +923,33 @@ section{ padding:18px 0 24px; }
       <div class="grid" id="productGrid"></div>
     </section>
 
-    <!-- FAQ -->
+    <!-- SERVICE -->
+    <section id="services">
+      <div class="section-head">
+        <div>
+          <h2>Service</h2>
+          <p>Kami bantu dari awal sampai jalan. Fokus ke pengalaman premium & aman.</p>
+        </div>
+        <a class="btn" href="#produk">Pilih Produk</a>
+      </div>
+
+      <div class="service-grid">
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;">⚙️ Instalasi & Setup</div>
+          <p>Bantuan instalasi, konfigurasi, dan optimasi agar siap dipakai.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;">🔑 Aktivasi</div>
+          <p>Panduan aktivasi jelas dan cepat sesuai paket yang dibeli.</p>
+        </div>
+        <div class="card">
+          <div style="font-weight:900;margin-bottom:6px;">💬 Support</div>
+          <p>Bantuan chat untuk kendala umum sesuai jam layanan.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ (Accordion) -->
     <section id="faq">
       <div class="section-head">
         <div>
@@ -701,17 +959,103 @@ section{ padding:18px 0 24px; }
         <a class="btn" href="#beranda">Kembali ke atas</a>
       </div>
 
-      <div class="grid" style="grid-template-columns:repeat(2,1fr);">
-        <div class="card">
-          <div style="font-weight:900;margin-bottom:6px;">Bagaimana cara membeli?</div>
-          <p>Pilih produk → klik “Beli Sekarang” → isi format → lanjut bayar QRIS → pilih status bayar → kirim → WhatsApp.</p>
+      <div class="faq-grid">
+        <div class="faq-item glass">
+          <button class="faq-btn" type="button">
+            <span>Bagaimana cara membeli?</span>
+            <span class="faq-ico">+</span>
+          </button>
+          <div class="faq-panel">
+            Pilih produk → klik <b>Beli Sekarang</b> → isi format → lanjut pembayaran QRIS →
+            pilih status bayar → kirim → WhatsApp admin.
+          </div>
         </div>
-        <div class="card">
-          <div style="font-weight:900;margin-bottom:6px;">Metode pembayaran?</div>
-          <p>QRIS saja. <b>Tanya stok ke admin dulu</b> sebelum bayar.</p>
+
+        <div class="faq-item glass">
+          <button class="faq-btn" type="button">
+            <span>Kenapa produk tidak muncul?</span>
+            <span class="faq-ico">+</span>
+          </button>
+          <div class="faq-panel">
+            Coba hapus kata di search, scroll ke atas lalu ulangi.
+            Pastikan nama produk kamu ketik sesuai (contoh: <b>Netflix</b>, <b>Canva</b>, dll).
+          </div>
+        </div>
+
+        <div class="faq-item glass">
+          <button class="faq-btn" type="button">
+            <span>Search bisa cari apa saja?</span>
+            <span class="faq-ico">+</span>
+          </button>
+          <div class="faq-panel">
+            Bisa cari berdasarkan <b>nama</b>, <b>brand</b> (Netflix/Canva/Spotify), <b>tag</b>, atau <b>durasi</b>.
+          </div>
+        </div>
+
+        <div class="faq-item glass">
+          <button class="faq-btn" type="button">
+            <span>Metode pembayaran apa saja?</span>
+            <span class="faq-ico">+</span>
+          </button>
+          <div class="faq-panel">
+            Pembayaran via <b>QRIS</b>. Wajib <b>tanya stok ke admin</b> dulu sebelum bayar.
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-wrap glass" id="footer">
+      <div class="footer-top">
+        <div class="f-brand">
+          <div class="f-logo" aria-hidden="true">
+            <img src="img/logo.png" alt="">
+          </div>
+          <div>
+            <p class="f-title">Faxml Store</p>
+            <p class="f-note">SECURED PAYMENT BY</p>
+            <div style="margin-top:10px;">
+              <img src="img/tripay.webp" alt="Tripay" style="height:34px;opacity:.95">
+            </div>
+          </div>
+        </div>
+
+        <div class="f-col">
+          <h4>Products</h4>
+          <div class="f-links">
+            <a href="#produk">Harga</a>
+            <a href="#services">Services</a>
+            <a href="#produk">AI Tools</a>
+          </div>
+        </div>
+
+        <div class="f-col">
+          <h4>Profile</h4>
+          <div class="f-links">
+            <a href="#beranda">Tentang Kami</a>
+            <a href="https://wa.me/6288221694607" target="_blank" rel="noopener">Kontak</a>
+          </div>
+        </div>
+
+        <div class="f-col">
+          <h4>Legalitas</h4>
+          <div class="f-links">
+            <a href="#faq">Kebijakan Privasi</a>
+            <a href="#faq">Syarat & Ketentuan</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-line"></div>
+
+      <div class="footer-bottom">
+        <div>© Faxml Store.</div>
+        <div class="footer-badges">
+          <div class="f-badge"><span>🛡️</span> Secure Payment</div>
+          <div class="f-badge"><span>🕘</span> 24/7 Support</div>
+        </div>
+      </div>
+    </footer>
 
     <!-- Floating WA -->
     <a class="pk-chat" href="https://wa.me/6288221694607" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
@@ -1019,6 +1363,16 @@ section{ padding:18px 0 24px; }
       addEventListener("DOMContentLoaded", mount);
     })();
 
+    // FAQ accordion
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".faq-btn");
+      if (!btn) return;
+      const item = btn.closest(".faq-item");
+      const ico = btn.querySelector(".faq-ico");
+      const isOpen = item.classList.toggle("open");
+      if (ico) ico.textContent = isOpen ? "−" : "+";
+    });
+
     // helpers
     const qs = (q) => document.querySelector(q);
     const normalize = (str) => (str ?? "").toString().toLowerCase().trim();
@@ -1058,7 +1412,7 @@ section{ padding:18px 0 24px; }
       });
     }
 
-    // DATA PRODUK (punyamu)
+    // DATA PRODUK
     const products = [
       { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 1 User", duration:"1 Bulan", price:35000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
       { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 2 User", duration:"1 Bulan", price:27000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
@@ -1507,9 +1861,7 @@ ${basePayNote}`;
       openPayModal();
     });
 
-    // =========================
-    // QRIS OVERLAY (Buka QRIS + X close)
-    // =========================
+    // QRIS OVERLAY
     const qrisView = qs("#qrisView");
     const qrisBigImg = qs("#qrisBigImg");
     const closeQrisBtn = qs("#closeQrisBtn");
@@ -1529,10 +1881,8 @@ ${basePayNote}`;
 
     // klik tombol "Buka QRIS" => buka overlay + tetap bisa open tab
     qrisHref?.addEventListener("click", (e) => {
-      // buka overlay
       openQrisView();
-      // kalau kamu mau JANGAN buka tab baru, aktifkan baris ini:
-      // e.preventDefault();
+      // e.preventDefault(); // aktifkan kalau mau JANGAN buka tab baru
     });
 
     // init
