@@ -187,6 +187,16 @@ a{ color:inherit; text-decoration:none; }
 h1{ margin:14px 0 10px; font-size: clamp(30px, 4vw, 44px); line-height:1.1; letter-spacing:-0.6px; }
 .sub{ margin:0 0 18px; color: var(--muted); font-size:16px; line-height:1.6; max-width:62ch; }
 
+/* ===== TYPING CURSOR ===== */
+.type-cursor{
+  display:inline-block;
+  margin-left:6px;
+  opacity:.9;
+  animation: blink .8s steps(1) infinite;
+}
+@keyframes blink{ 50%{opacity:0;} }
+/* ========================= */
+
 .showcase{ padding:18px; border-radius: var(--radius2); display:flex; flex-direction:column; gap:12px; }
 .badge{
   display:inline-flex; align-items:center; gap:8px; padding:7px 10px;
@@ -610,7 +620,7 @@ section{ padding:18px 0 24px; }
 }
 
 /* =========================
-   HERO - FLOATING SMALL APP ICONS (VERSI SEBELUMNYA)
+   HERO - FLOATING SMALL APP ICONS
    ========================= */
 .hero-card{ position:relative; overflow:hidden; }
 
@@ -683,7 +693,7 @@ section{ padding:18px 0 24px; }
 @media (prefers-reduced-motion: reduce){ .app-float{ animation:none!important; } }
 
 /* =========================
-   SERVICE + FAQ (Accordion) + FOOTER (SAMA SEPERTI SCREENSHOT)
+   SERVICE + FAQ + FOOTER
    ========================= */
 .service-grid{
   display:grid;
@@ -876,19 +886,24 @@ section{ padding:18px 0 24px; }
         <div class="hero-card glass hero-anim">
           <div class="kicker"><span class="dot"></span> Marketplace Aplikasi Premium • Garansi & Support</div>
 
-          <!-- FLOATING APP ICONS (BANYAK, KECIL) -->
+          <!-- FLOATING APP ICONS -->
           <div class="app-float-wrap" aria-hidden="true">
             <span class="app-float a1"><img src="img/logonet.png" alt=""></span>
-            <span class="app-float a2"><img src="img/logocap.png" alt=""></span>
-            <span class="app-float a3"><img src="img/logocap.png" alt=""></span>
+            <span class="app-float a2"><img src="img/logocan.png" alt=""></span>
+            <span class="app-float a3"><img src="img/logospo.png" alt=""></span>
             <span class="app-float a4"><img src="img/logocap.png" alt=""></span>
             <span class="app-float a5"><img src="img/logonet.png" alt=""></span>
             <span class="app-float a6"><img src="img/logocap.png" alt=""></span>
-            <span class="app-float a7"><img src="img/logonet.png" alt=""></span>
+            <span class="app-float a7"><img src="img/logoam.png" alt=""></span>
             <span class="app-float a8"><img src="img/logonet.png" alt=""></span>
           </div>
 
-          <h1>Jual Aplikasi Premium, Aman, dan Tepercaya.</h1>
+          <!-- ===== H1 TYPING LOOP ===== -->
+          <h1>
+            <span id="typeTarget"></span><span class="type-cursor" aria-hidden="true">|</span>
+          </h1>
+          <!-- ========================== -->
+
           <p class="sub">Pilih produk → isi format → lanjut pembayaran QRIS → konfirmasi sudah bayar → kirim → WhatsApp admin.</p>
         </div>
 
@@ -949,7 +964,7 @@ section{ padding:18px 0 24px; }
       </div>
     </section>
 
-    <!-- FAQ (Accordion) -->
+    <!-- FAQ -->
     <section id="faq">
       <div class="section-head">
         <div>
@@ -1329,6 +1344,46 @@ section{ padding:18px 0 24px; }
   </div>
 
   <script>
+    /* =========================
+       TYPING EFFECT LOOP (H1)
+       ========================= */
+    (function typingLoop(){
+      const el = document.getElementById("typeTarget");
+      if(!el) return;
+
+      const text = "Jual Aplikasi Premium, Aman, dan Tepercaya.";
+      const typeSpeed = 55;
+      const deleteSpeed = 28;
+      const pauseAfterType = 1200;
+      const pauseAfterDelete = 450;
+
+      let i = 0;
+      let deleting = false;
+
+      function tick(){
+        if(!deleting){
+          el.textContent = text.slice(0, i + 1);
+          i++;
+          if(i === text.length){
+            deleting = true;
+            setTimeout(tick, pauseAfterType);
+            return;
+          }
+          setTimeout(tick, typeSpeed);
+        }else{
+          el.textContent = text.slice(0, i - 1);
+          i--;
+          if(i === 0){
+            deleting = false;
+            setTimeout(tick, pauseAfterDelete);
+            return;
+          }
+          setTimeout(tick, deleteSpeed);
+        }
+      }
+      tick();
+    })();
+
     /* FX overlay */
     (() => {
       const rand = (a,b)=>Math.random()*(b-a)+a;
