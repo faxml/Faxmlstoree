@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
- :root{
+:root{
   --bg0:#070913;
   --bg1:#0b1024;
   --stroke: rgba(255,255,255,.14);
@@ -40,7 +41,6 @@ body{
   background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%;
   animation: bgShift 18s ease-in-out infinite;
 }
-
 header, main{ position:relative; z-index:1; }
 @keyframes bgShift{
   0%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
@@ -87,9 +87,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .btn:disabled{ opacity:.55; cursor:not-allowed; transform:none !important; }
 
-/* =========================
-   NAV
-   ========================= */
+/* NAV */
 .nav{ position: sticky; top: 14px; z-index: 50; margin-top: 14px; }
 .nav-inner{
   display:flex; align-items:center; justify-content:space-between;
@@ -174,9 +172,7 @@ a{ color:inherit; text-decoration:none; }
   .hamburger{ width:40px; height:40px; }
 }
 
-/* =========================
-   HERO / SECTION
-   ========================= */
+/* HERO / SECTION */
 .hero{ padding:44px 0 26px; }
 .hero-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch; }
 .hero-card{ padding:26px; border-radius: var(--radius2); position:relative; overflow:hidden; }
@@ -278,9 +274,7 @@ section{ padding:18px 0 24px; }
   color: rgba(255,255,255,.75);
 }
 
-/* =========================
-   MODAL (RAPI + MOBILE)
-   ========================= */
+/* MODAL */
 .modal-overlay{
   position: fixed;
   inset: 0;
@@ -301,7 +295,6 @@ section{ padding:18px 0 24px; }
   display: flex;
   flex-direction: column;
 }
-
 .modal-header{
   flex: 0 0 auto;
   display:flex;
@@ -317,7 +310,6 @@ section{ padding:18px 0 24px; }
   line-height:1.2;
   letter-spacing:-.2px;
 }
-
 .modal-close{
   background: transparent;
   border: none;
@@ -336,8 +328,6 @@ section{ padding:18px 0 24px; }
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
-
-/* TYPOGRAPHY khusus modal agar teks rapi */
 .modal-body, .modal-body *{
   line-height:1.6;
   letter-spacing:.1px;
@@ -347,13 +337,6 @@ section{ padding:18px 0 24px; }
   margin: 10px 0;
   color: rgba(255,255,255,.78);
   font-size: 14px;
-}
-.modal-body .instruction,
-.modal-body .qris-instruction{
-  font-size: 13px;
-  line-height: 1.65;
-  color: rgba(255,255,255,.72);
-  text-wrap: pretty;
 }
 
 .modal-footer{
@@ -440,45 +423,43 @@ section{ padding:18px 0 24px; }
 }
 .req{ color:#ff6b6b; }
 
-/* RADIO (Sudah / Belum) - pakai class ini di HTML */
+/* RADIO FINAL FIX */
 .radio-row{
   display:flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap:12px;
+  flex-wrap:wrap;
   align-items:center;
-  margin-top: 6px;
+  margin-top:6px;
 }
 .radio-item{
   display:inline-flex;
   align-items:center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.12);
+  gap:10px;
+  min-height:40px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.04);
 }
 .radio-item input[type="radio"]{
-  width: 18px;
-  height: 18px;
-  accent-color: #7b5bff;
-  cursor:pointer;
+  width:18px;
+  height:18px;
+  accent-color:#7b5bff;
 }
 .radio-item label{
   margin:0;
-  font-weight: 900;
-  font-size: 14px;
-  color: rgba(255,255,255,.86);
-  cursor:pointer;
+  font-weight:900;
+  font-size:14px;
+  color:rgba(255,255,255,.86);
+  white-space:nowrap;   /* IMPORTANT */
+  word-break:normal;
 }
 .radio-item:has(input[type="radio"]:checked){
   border-color: rgba(117,83,255,.45);
   background: rgba(117,83,255,.12);
 }
 
-/* =========================
-   Floating WhatsApp
-   ========================= */
+/* Floating WhatsApp */
 .pk-chat{
   position: fixed;
   right: 16px;
@@ -498,9 +479,7 @@ section{ padding:18px 0 24px; }
 .pk-chat:hover{ transform: translateY(-2px); }
 .pk-chat .wa-ico{ width: 26px; height: 26px; color: #fff; }
 
-/* =========================
-   FX Overlay (gelembung + shimmer)
-   ========================= */
+/* FX Overlay (gelembung + shimmer) */
 .fx-overlay{
   position: fixed;
   inset: 0;
@@ -565,54 +544,70 @@ section{ padding:18px 0 24px; }
   .fx-shimmer, .fx-p{ animation: none !important; }
 }
 
-/* =========================
-   MOBILE FINAL TUNING
-   ========================= */
-/* =========================
-   MOBILE FINAL TUNING (FIX RADIO)
-   ========================= */
+/* MOBILE tuning modal + radio */
 @media (max-width: 640px){
-  .modal{
-    width: 100%;
-    max-height: 86vh;
-    border-radius: 18px;
-  }
-  .modal-body{
-    padding: 14px;
-  }
-  .modal-body p{
-    font-size: 13px;
-    line-height: 1.65;
-  }
-  .field label{ font-size: 12px; }
-
-  /* FIX: Radio jangan bikin teks pecah */
-  .radio-row{
-    gap: 12px;
-  }
+  .modal{ width:100%; max-height: 86vh; border-radius: 18px; }
+  .modal-body{ padding:14px; }
+  .modal-body p{ font-size:13px; line-height:1.65; }
+  .field label{ font-size:12px; }
 
   .radio-item{
-    flex: 0 0 calc(50% - 6px);   /* 2 kolom rapi */
+    flex: 0 0 calc(50% - 6px);
     min-width: 0;
-    justify-content: flex-start; /* jangan center agar label punya ruang */
-    padding: 10px 12px;
-  }
-
-  .radio-item label{
-    white-space: nowrap;         /* STOP pecah "Su/da/h" */
-    word-break: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    justify-content:flex-start;
   }
 }
-
-/* layar sangat kecil: jadi 1 kolom */
 @media (max-width: 380px){
-  .radio-item{
-    flex: 0 0 100%;
-  }
+  .radio-item{ flex: 0 0 100%; }
 }
 
+/* =========================
+   QRIS OVERLAY (Buka QRIS + tombol X)
+   ========================= */
+.qris-view{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,.65);
+  z-index: 10000;
+}
+.qris-view.show{ display:flex; }
+
+.qris-box{
+  position: relative;
+  width: min(520px, 100%);
+  border-radius: 18px;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.qris-x{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.35);
+  color: rgba(255,255,255,.92);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.qris-x:hover{ background: rgba(255,255,255,.08); }
+
+.qris-img-big{
+  width: 100%;
+  height: auto;
+  display:block;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+}
 </style>
 </head>
 
@@ -911,85 +906,86 @@ section{ padding:18px 0 24px; }
     </div>
   </div>
 
- <!-- PAYMENT MODAL (QRIS) -->
-<div id="payModal" class="modal-overlay" aria-hidden="true">
-  <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="payTitle">
-    <div class="modal-header">
-      <h3 id="payTitle">Pembayaran QRIS</h3>
-      <button id="closePay" class="modal-close" type="button">✕</button>
-    </div>
-
-    <div class="modal-body">
-
-      <!-- NOTIF DI ATAS (HANYA 1, JANGAN DOUBLE ID) -->
-      <div id="paidNotif"
-           style="display:none;margin-bottom:12px;padding:10px 12px;border-radius:12px;
-                  background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);
-                  color:rgba(255,255,255,.92);font-weight:900;font-size:13px;">
-        🔔 Pembayaran Berhasil (Klik <b>Lanjut WhatsApp</b>)
+  <!-- PAYMENT MODAL (QRIS) -->
+  <div id="payModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+      <div class="modal-header">
+        <h3 id="payTitle">Pembayaran QRIS</h3>
+        <button id="closePay" class="modal-close" type="button">✕</button>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <div style="font-weight:900">Silakan bayar sesuai nominal:</div>
-        <div id="payAmount" style="font-size:22px;font-weight:900;"></div>
-
-        <div style="border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px;background:rgba(255,255,255,.04);">
-          <div style="font-weight:900; margin-bottom:6px;">⚠️ QRIS NOTE</div>
-          <div style="color:rgba(255,255,255,.78);font-weight:800;font-size:13px;line-height:1.6;">
-            • <b>Tanyakan stok ke admin dulu</b> sebelum melakukan pembayaran.<br>
-            • Setelah admin konfirmasi stok, baru lanjut bayar via QRIS.<br>
-            • Setelah bayar, pilih <b>Sudah</b> lalu klik <b>Kirim</b>.
-          </div>
+      <div class="modal-body">
+        <div id="paidNotif"
+          style="display:none;margin-bottom:12px;padding:10px 12px;border-radius:12px;
+          background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);
+          color:rgba(255,255,255,.92);font-weight:900;font-size:13px;">
+          🔔 Pembayaran Berhasil (Klik <b>Lanjut WhatsApp</b>)
         </div>
 
-        <div style="border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px;background:rgba(255,255,255,.04);">
-          <img id="qrisImg" alt="QRIS"
-               style="width:100%;max-width:340px;display:block;margin:0 auto;border-radius:12px;">
-          <div style="margin-top:10px;color:rgba(255,255,255,.75);font-weight:800;font-size:13px;line-height:1.6;">
-            Scan QRIS → pilih status bayar → klik <b>“Kirim”</b> untuk konfirmasi (notif muncul) → klik <b>“Lanjut WhatsApp”</b>.
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="font-weight:900">Silakan bayar sesuai nominal:</div>
+          <div id="payAmount" style="font-size:22px;font-weight:900;"></div>
+
+          <div style="border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px;background:rgba(255,255,255,.04);">
+            <div style="font-weight:900; margin-bottom:6px;">⚠️ QRIS NOTE</div>
+            <div style="color:rgba(255,255,255,.78);font-weight:800;font-size:13px;line-height:1.6;">
+              • <b>Tanyakan stok ke admin dulu</b> sebelum melakukan pembayaran.<br>
+              • Setelah admin konfirmasi stok, baru lanjut bayar via QRIS.<br>
+              • Setelah bayar, pilih <b>Sudah</b> lalu klik <b>Kirim</b>.
+            </div>
           </div>
 
-          <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;">
-            <a id="qrisHref" class="btn" href="#" target="_blank" rel="noopener">Buka QRIS</a>
-            <button id="askStockBtn" type="button" class="btn">Tanya stok</button>
+          <div style="border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px;background:rgba(255,255,255,.04);">
+            <img id="qrisImg" alt="QRIS"
+              style="width:100%;max-width:340px;display:block;margin:0 auto;border-radius:12px;">
+            <div style="margin-top:10px;color:rgba(255,255,255,.75);font-weight:800;font-size:13px;line-height:1.6;">
+              Scan QRIS → pilih status bayar → klik <b>“Kirim”</b> untuk konfirmasi (notif muncul) → klik <b>“Lanjut WhatsApp”</b>.
+            </div>
+
+            <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;">
+              <a id="qrisHref" class="btn" href="#" target="_blank" rel="noopener">Buka QRIS</a>
+              <button id="askStockBtn" type="button" class="btn">Tanya stok</button>
+            </div>
           </div>
+
+          <div class="field">
+            <label>Apakah sudah bayar? <span class="req">*</span></label>
+            <div class="radio-row">
+              <div class="radio-item">
+                <input type="radio" id="paid_yes" name="paid" value="yes">
+                <label for="paid_yes">Sudah</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" id="paid_no" name="paid" value="no" checked>
+                <label for="paid_no">Belum</label>
+              </div>
+            </div>
+
+            <small style="display:block;margin-top:8px;color:rgba(255,255,255,.70);font-weight:800;line-height:1.5;">
+              Pilih <b>Sudah</b> jika kamu sudah scan QRIS, lalu klik <b>Kirim</b>.
+            </small>
+          </div>
+
         </div>
+      </div>
 
-        <!-- KONFIRMASI SUDAH BAYAR -->
-        <div class="field">
-          <label>Apakah sudah bayar? <span class="req">*</span></label>
-<div class="radio-row">
-  <div class="radio-item">
-    <input type="radio" id="paid_yes" name="paid" value="yes">
-    <label for="paid_yes">Sudah</label>
-  </div>
-  <div class="radio-item">
-    <input type="radio" id="paid_no" name="paid" value="no">
-    <label for="paid_no">Belum</label>
-  </div>
-</div>
-
-
-          <small style="display:block;margin-top:8px;color:rgba(255,255,255,.70);font-weight:800;line-height:1.5;">
-            Pilih <b>Sudah</b> jika kamu sudah scan QRIS, lalu klik <b>Kirim</b>.
-          </small>
-        </div>
-
+      <div class="modal-footer">
+        <button type="button" class="btn" id="backToForm">Kembali</button>
+        <button type="button" class="btn primary" id="sendPaid" disabled>Kirim</button>
       </div>
     </div>
+  </div>
 
-    <div class="modal-footer">
-      <button type="button" class="btn" id="backToForm">Kembali</button>
-      <button type="button" class="btn primary" id="sendPaid" disabled>Kirim</button>
+  <!-- QRIS OVERLAY (besar + tombol X) -->
+  <div id="qrisView" class="qris-view" aria-hidden="true">
+    <div class="qris-box glass" role="dialog" aria-modal="true" aria-label="QRIS">
+      <button id="closeQrisBtn" class="qris-x" type="button" aria-label="Tutup QRIS">×</button>
+      <img id="qrisBigImg" class="qris-img-big" alt="QRIS Besar">
     </div>
   </div>
-</div>
-
 
   <script>
-    /* =========================
-       OVERLAY GELEMBUNG (1x saja)
-    ========================= */
+    /* FX overlay */
     (() => {
       const rand = (a,b)=>Math.random()*(b-a)+a;
       function build(wrap){
@@ -1032,7 +1028,7 @@ section{ padding:18px 0 24px; }
     const WA_NUMBER = "6288221694607";
     const waLink = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
 
-    // QRIS image (taruh file: img/qris.jpeg)
+    // QRIS image
     const QRIS_IMAGE_URL = "img/qris.jpeg";
 
     const formatRupiah = (n) => {
@@ -1062,14 +1058,11 @@ section{ padding:18px 0 24px; }
       });
     }
 
-    // =========================
-    // DATA PRODUK
-    // =========================
+    // DATA PRODUK (punyamu)
     const products = [
       { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 1 User", duration:"1 Bulan", price:35000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
       { brand:"netflix", label:"NETFLIX", name:"Netflix Premium 2 User", duration:"1 Bulan", price:27000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
       { brand:"netflix", label:"NETFLIX", name:"Netflix Premium SemiPrivate", duration:"1 Bulan", price:39000, stock:10, tag:"Best Seller", img:"img/netflix.png" },
-
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 3 User", duration:"1 Bulan", price:10000, stock:20, tag:"Team", img:"img/capcut.jpg" },
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 8 User", duration:"1 Bulan", price:5000,  stock:20, tag:"Team", img:"img/capcut.jpg" },
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Sharing 5 User", duration:"1 Bulan", price:7000,  stock:20, tag:"Team", img:"img/capcut.jpg" },
@@ -1077,44 +1070,31 @@ section{ padding:18px 0 24px; }
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 14 Hari", duration:"14 Hari", price:15000, stock:20, tag:"Original", img:"img/capcut.jpg" },
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 28 Hari", duration:"28 Hari", price:20000, stock:20, tag:"Original", img:"img/capcut.jpg" },
       { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi Full", duration:"35 Hari", price:23000, stock:20, tag:"Original", img:"img/capcut.jpg" },
-
       { brand:"chatgpt", label:"CHATGPT", name:"ChatGPT Premium Private", duration:"1 Bulan", price:18000, stock:20, tag:"Populer", img:"img/chatgpt.png" },
       { brand:"gemini",  label:"GEMINI",  name:"GEMINI PRO + GDRIVE 2TB + Veo3", duration:"1 Bulan", price:10000, stock:20, tag:"Populer", img:"img/gemini.png" },
-
       { brand:"canva",   label:"CANVA",   name:"Canva Premium Team", duration:"1 Bulan", price:6000,  stock:50, tag:"Team", img:"img/canva.png" },
       { brand:"canva",   label:"CANVA",   name:"Canva Premium Team (Plus)", duration:"1 Bulan", price:15000, stock:20, tag:"Team", img:"img/canva.png" },
-
       { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Famplan", duration:"1 Bulan", price:26000, stock:10, tag:"Ready", img:"img/spotify.png" },
       { brand:"spotify", label:"SPOTIFY", name:"Spotify Premium Indplan", duration:"1 Bulan", price:28000, stock:10, tag:"Ready", img:"img/spotify.png" },
-
       { brand:"youtube", label:"YOUTUBE", name:"YouTube Premium Famplan", duration:"1 Bulan", price:5000, stock:10, tag:"Team", img:"img/youtube.png" },
       { brand:"youtube", label:"YOUTUBE", name:"YouTube Premium Indplan", duration:"1 Bulan", price:15000, stock:10, tag:"Populer", img:"img/youtube.png" },
-
       { brand:"alight",  label:"ALIGHT",  name:"Alight Motion Premium", duration:"1 Tahun", price:10000, stock:100, tag:"Populer", img:"img/alightmotion.png" },
-      { brand:"Tutor AM",  label:"Tutor AM",  name:"Tutor Alight Motion", duration:"Seumurhidup", price:80000, stock:100, tag:"Populer", img:"img/tutoram.png" },
-
+      { brand:"Tutor AM", label:"Tutor AM", name:"Tutor Alight Motion", duration:"Seumurhidup", price:80000, stock:100, tag:"Populer", img:"img/tutoram.png" },
       { brand:"wink",  label:"WINK", name:"Wink Premium Private Android", duration:"7 Hari", price:10000, stock:10, tag:"Populer", img:"img/wink.png" },
-
       { brand:"viu",  label:"VIU", name:"Viu Premium Private", duration:"3 Bulan", price:13000, stock:20, tag:"Original", img:"img/viu.png" },
       { brand:"viu",  label:"VIU", name:"Viu Premium Private", duration:"Lifetime", price:20000, stock:20, tag:"Populer", img:"img/viu.png" },
-
       { brand:"bstation", label:"B-STATION", name:"Bstation Premium Sharing", duration:"1 Bulan", price:13000, stock:20, tag:"Populer", img:"img/bstation.png" },
       { brand:"wetv", label:"WETV", name:"Wetv Premium Sharing 8 User", duration:"1 Bulan", price:10000, stock:20, tag:"Original", img:"img/wetv.png" },
-
       { brand:"vidio", label:"VIDIO", name:"Vidio Premium Sharing 2 User", duration:"1 Bulan", price:25000, stock:20, tag:"Original", img:"img/vidio.png" },
       { brand:"vidio", label:"VIDIO", name:"Vidio Premium Sharing 2u Onlyhp", duration:"1 Bulan", price:20000, stock:20, tag:"Original", img:"img/vidio.png" },
       { brand:"vidio", label:"VIDIO", name:"Vidio Premium Private Alldev", duration:"1 Bulan", price:36000, stock:20, tag:"Original", img:"img/vidio.png" },
       { brand:"vidio", label:"VIDIO", name:"Vidio Premium Private Onlyhp", duration:"1 Bulan", price:28000, stock:20, tag:"Original", img:"img/vidio.png" },
       { brand:"vidio", label:"VIDIO", name:"Vidio OnlyTV", duration:"1 Tahun", price:13000, stock:20, tag:"Original", img:"img/vidio.png" },
-
       { brand:"hbomax", label:"HBO MAX", name:"HBO MAX Sharing", duration:"1 Bulan", price:19000, stock:20, tag:"Original", img:"img/hbomax.png" },
-
       { brand:"iqiyi", label:"IQIYI", name:"Iqiyi Sharing Standar", duration:"1 Bulan", price:12000, stock:20, tag:"Original", img:"img/iqiyi.png" },
       { brand:"iqiyi", label:"IQIYI", name:"Iqiyi Sharing Prem", duration:"1 Bulan", price:15000, stock:20, tag:"Original", img:"img/iqiyi.png" },
-
       { brand:"prime video", label:"PRIME VIDEO", name:"Prime Video Sharing", duration:"1 Bulan", price:12000, stock:20, tag:"Original", img:"img/primevideo.png" },
       { brand:"prime video", label:"PRIME VIDEO", name:"Prime Video Private", duration:"1 Bulan", price:18000, stock:20, tag:"Original", img:"img/primevideo.png" },
-
       { brand:"lightroom", label:"LIGHTROOM", name:"Lightroom Premium Sharing", duration:"1 Tahun", price:20000, stock:20, tag:"Original", img:"img/lightroom.png" },
       { brand:"picsart", label:"PICSART", name:"Picsart Premium Private", duration:"1 Bulan", price:14000, stock:20, tag:"Original", img:"img/picsart.png" },
     ];
@@ -1151,9 +1131,7 @@ section{ padding:18px 0 24px; }
 
             ${
               ready
-                ? `<button
-                    class="btn btn-buy primaryish"
-                    type="button"
+                ? `<button class="btn btn-buy primaryish" type="button"
                     data-buy
                     data-product="${p.name}"
                     data-brand="${p.brand}"
@@ -1187,17 +1165,15 @@ section{ padding:18px 0 24px; }
     searchInput?.addEventListener("input", (e) => setSearchValue(e.target.value));
     searchClear?.addEventListener("click", () => setSearchValue(""));
 
-    // modal buy
+    // BUY modal
     const buyModal = qs("#buyModal");
     const closeModal = qs("#closeModal");
     const cancelModal = qs("#cancelModal");
     const buyForm = qs("#buyForm");
-
     const mPreview = qs("#mPreview");
     const f_tgl = qs("#f_tgl");
     const f_durasi = qs("#f_durasi");
 
-    // disable input blok yang tidak aktif
     const blocks = ["netflix","sharing","private","youtube","canva","spotify","alight"];
     function showBlock(type){
       blocks.forEach((k) => {
@@ -1240,7 +1216,6 @@ section{ padding:18px 0 24px; }
       if (f_tgl) f_tgl.value = todayISO();
       if (f_durasi) f_durasi.value = selectedOrder.duration || "";
 
-      // auto isi nama apk
       const s_apk = qs("#s_apk"); if (s_apk) s_apk.value = selectedOrder.product;
       const p_apk = qs("#p_apk"); if (p_apk) p_apk.value = selectedOrder.product;
 
@@ -1273,91 +1248,81 @@ section{ padding:18px 0 24px; }
     cancelModal?.addEventListener("click", closeBuyModal);
     buyModal?.addEventListener("click", (e) => { if (e.target === buyModal) closeBuyModal(); });
 
-    // =========================
-// PAYMENT MODAL (FINAL 2-STEP)
-// =========================
-const payModal = qs("#payModal");
-const closePay = qs("#closePay");
-const backToForm = qs("#backToForm");
-const sendPaid = qs("#sendPaid");
-const payAmount = qs("#payAmount");
-const qrisImg = qs("#qrisImg");
-const qrisHref = qs("#qrisHref");
-const askStockBtn = qs("#askStockBtn");
+    // PAYMENT modal
+    const payModal = qs("#payModal");
+    const closePay = qs("#closePay");
+    const backToForm = qs("#backToForm");
+    const sendPaid = qs("#sendPaid");
+    const payAmount = qs("#payAmount");
+    const qrisImg = qs("#qrisImg");
+    const qrisHref = qs("#qrisHref");
+    const askStockBtn = qs("#askStockBtn");
+    const paidNotif = qs("#paidNotif");
 
-const paidYes = qs("#paidYes");
-const paidNo = qs("#paidNo");
-const paidNotif = qs("#paidNotif");
+    const paidYes = qs("#paid_yes");
+    const paidNo  = qs("#paid_no");
 
-let waReadyToOpen = false; // klik 1 notif, klik 2 WA
+    let waReadyToOpen = false;
 
-function resetPayUI() {
-  waReadyToOpen = false;
-  if (paidNotif) paidNotif.style.display = "none";
-  if (sendPaid) {
-    sendPaid.textContent = "Kirim";
-    sendPaid.disabled = !(paidYes?.checked === true);
-  }
-}
-
-function syncSendPaidState() {
-  const isPaid = (paidYes?.checked === true);
-
-  // kalau belum tahap lanjut WA, tombol ikut radio
-  if (!waReadyToOpen && sendPaid) {
-    sendPaid.disabled = !isPaid;
-  }
-
-  // kalau user pindah ke "Belum", reset semua
-  if (!isPaid) {
-    waReadyToOpen = false;
-    if (paidNotif) paidNotif.style.display = "none";
-    if (sendPaid) {
-      sendPaid.textContent = "Kirim";
-      sendPaid.disabled = true;
+    function resetPayUI(){
+      waReadyToOpen = false;
+      if (paidNotif) paidNotif.style.display = "none";
+      if (sendPaid){
+        sendPaid.textContent = "Kirim";
+        sendPaid.disabled = !(paidYes?.checked === true);
+      }
     }
-  }
-}
 
-paidYes?.addEventListener("change", syncSendPaidState);
-paidNo?.addEventListener("change", syncSendPaidState);
+    function syncSendPaidState(){
+      const isPaid = (paidYes?.checked === true);
+      if (!waReadyToOpen && sendPaid) sendPaid.disabled = !isPaid;
 
-function openPayModal() {
-  if (payAmount) payAmount.textContent = formatRupiah(selectedOrder.price);
+      if (!isPaid){
+        waReadyToOpen = false;
+        if (paidNotif) paidNotif.style.display = "none";
+        if (sendPaid){
+          sendPaid.textContent = "Kirim";
+          sendPaid.disabled = true;
+        }
+      }
+    }
 
-  if (qrisImg) qrisImg.src = QRIS_IMAGE_URL;
-  if (qrisHref) qrisHref.href = QRIS_IMAGE_URL;
+    paidYes?.addEventListener("change", syncSendPaidState);
+    paidNo?.addEventListener("change", syncSendPaidState);
 
-  // reset saat modal dibuka
-  if (paidNo) paidNo.checked = true;
-  resetPayUI();
-  syncSendPaidState();
+    function openPayModal(){
+      if (payAmount) payAmount.textContent = formatRupiah(selectedOrder.price);
+      if (qrisImg) qrisImg.src = QRIS_IMAGE_URL;
+      if (qrisHref) qrisHref.href = QRIS_IMAGE_URL;
 
-  payModal.classList.add("show");
-  payModal.setAttribute("aria-hidden", "false");
-}
+      if (paidNo) paidNo.checked = true;
+      resetPayUI();
+      syncSendPaidState();
 
-function closePayModal() {
-  payModal.classList.remove("show");
-  payModal.setAttribute("aria-hidden", "true");
+      payModal.classList.add("show");
+      payModal.setAttribute("aria-hidden", "false");
+    }
 
-  if (paidNo) paidNo.checked = true;
-  resetPayUI();
-  syncSendPaidState();
-}
+    function closePayModal(){
+      payModal.classList.remove("show");
+      payModal.setAttribute("aria-hidden", "true");
+      if (paidNo) paidNo.checked = true;
+      resetPayUI();
+      syncSendPaidState();
+    }
 
-closePay?.addEventListener("click", closePayModal);
-payModal?.addEventListener("click", (e) => { if (e.target === payModal) closePayModal(); });
+    closePay?.addEventListener("click", closePayModal);
+    payModal?.addEventListener("click", (e) => { if (e.target === payModal) closePayModal(); });
 
-backToForm?.addEventListener("click", () => {
-  closePayModal();
-  buyModal.classList.add("show");
-  buyModal.setAttribute("aria-hidden", "false");
-});
+    backToForm?.addEventListener("click", () => {
+      closePayModal();
+      buyModal.classList.add("show");
+      buyModal.setAttribute("aria-hidden", "false");
+    });
 
-askStockBtn?.addEventListener("click", () => {
-  if (!selectedOrder.product) return alert("Pilih produk dulu.");
-  const msg =
+    askStockBtn?.addEventListener("click", () => {
+      if (!selectedOrder.product) return alert("Pilih produk dulu.");
+      const msg =
 `Halo admin, saya mau tanya stok dulu ya ✅
 
 Produk: ${selectedOrder.product}
@@ -1365,46 +1330,38 @@ Durasi: ${selectedOrder.duration}
 Harga: ${formatRupiah(selectedOrder.price)}
 
 Apakah stok ready?`;
-  window.open(waLink(msg), "_blank", "noopener,noreferrer");
-});
+      window.open(waLink(msg), "_blank", "noopener,noreferrer");
+    });
 
-// klik "Kirim" (1x notif), klik lagi (2x WA)
-sendPaid?.addEventListener("click", () => {
-  if (!waFinalMessage) return alert("Data order belum ada. Isi format dulu.");
+    // Kirim -> notif -> lanjut whatsapp
+    sendPaid?.addEventListener("click", () => {
+      if (!waFinalMessage) return alert("Data order belum ada. Isi format dulu.");
+      const isPaid = (paidYes?.checked === true);
+      if (!isPaid) return;
 
-  const isPaid = (paidYes?.checked === true);
-  if (!isPaid) return;
+      if (!waReadyToOpen){
+        if (paidNotif) paidNotif.style.display = "block";
+        const body = payModal?.querySelector(".modal-body");
+        if (body) body.scrollTo({ top: 0, behavior: "smooth" });
 
-  // KLIK 1: tampil notif, jangan WA dulu
-  if (!waReadyToOpen) {
-    if (paidNotif) paidNotif.style.display = "block";
+        waReadyToOpen = true;
+        sendPaid.textContent = "Lanjut WhatsApp";
+        sendPaid.disabled = false;
+        return;
+      }
 
-    const body = payModal?.querySelector(".modal-body");
-    if (body) body.scrollTo({ top: 0, behavior: "smooth" });
-
-    waReadyToOpen = true;
-
-    if (sendPaid) {
-      sendPaid.textContent = "Lanjut WhatsApp";
-      sendPaid.disabled = false;
-    }
-    return;
-  }
-
-  // KLIK 2: baru ke WhatsApp
-  const finalMsg =
+      const finalMsg =
 `${waFinalMessage}
 
 🔔 *Konfirmasi pembayaran:* SUDAH BAYAR
 ⏳ Status: Menunggu admin proses.`.trim();
 
-  window.open(waLink(finalMsg), "_blank", "noopener,noreferrer");
-  closePayModal();
-  closeBuyModal();
-});
+      window.open(waLink(finalMsg), "_blank", "noopener,noreferrer");
+      closePayModal();
+      closeBuyModal();
+    });
 
-
-    // submit BUY FORM -> payment modal
+    // BUY FORM submit -> buat waFinalMessage -> buka payment
     buyForm?.addEventListener("submit", (e) => {
       e.preventDefault();
 
@@ -1426,7 +1383,6 @@ Nominal: *${hargaTxt}*`;
         const lokasi = requireVal(qs("#n_lokasi")?.value);
         const tipe = requireVal(qs("#n_tipe")?.value);
         if (!merk || !lokasi || !tipe) return alert("Harap isi semua field wajib (*)");
-
         msg =
 `*Format Netflix*
 
@@ -1439,14 +1395,12 @@ Nominal: *${hargaTxt}*`;
 *🐣* 1u/2u/semipriv/priv : ${tipe}
 
 ${basePayNote}`;
-      }
-      else if (type === "youtube") {
+      } else if (type === "youtube") {
         const plan = requireVal(qs("#y_plan")?.value);
         const email = requireVal(qs("#y_email")?.value);
         const pass = requireVal(qs("#y_pass")?.value);
         if (!plan || !email) return alert("Harap isi semua field wajib (*)");
         if (plan === "indplan" && !pass) return alert("Indplan wajib isi password");
-
         msg =
 `•┈  *format youtube* ┈•
 
@@ -1459,12 +1413,10 @@ ${basePayNote}`;
 *𔘓* famplan/indplan : ${plan}
 
 ${basePayNote}`;
-      }
-      else if (type === "canva") {
+      } else if (type === "canva") {
         const email = requireVal(qs("#c_email")?.value);
         const design = requireVal(qs("#c_design")?.value);
         if (!email || !design) return alert("Harap isi semua field wajib (*)");
-
         msg =
 `•┈  *format canva* ┈•
 
@@ -1476,13 +1428,11 @@ ${basePayNote}`;
 *𔘓* design/no : ${design}
 
 ${basePayNote}`;
-      }
-      else if (type === "spotify") {
+      } else if (type === "spotify") {
         const plan = requireVal(qs("#sp_plan")?.value);
         const email = requireVal(qs("#sp_email")?.value);
         const pass = requireVal(qs("#sp_pass")?.value);
         if (!plan || !email || !pass) return alert("Harap isi semua field wajib (*)");
-
         msg =
 `•┈  *format spotify* ┈•
 
@@ -1495,12 +1445,10 @@ ${basePayNote}`;
 *𔘓* famplan/indplan : ${plan}
 
 ${basePayNote}`;
-      }
-      else if (type === "alight") {
+      } else if (type === "alight") {
         const pass = requireVal(qs("#a_pass")?.value);
         const note = requireVal(qs("#a_note")?.value);
         if (!pass) return alert("Harap isi password (*)");
-
         msg =
 `•┈  *format alightmotion* ┈•
 
@@ -1514,12 +1462,10 @@ ${basePayNote}`;
 ${note ? "• catatan : " + note : ""}
 
 ${basePayNote}`.trim();
-      }
-      else if (type === "private") {
+      } else if (type === "private") {
         const apk = requireVal(qs("#p_apk")?.value);
         const ket = requireVal(qs("#p_ket")?.value);
         if (!apk || !ket) return alert("Harap isi semua field wajib (*)");
-
         msg =
 `•┈ *format app private*┈•
 
@@ -1533,14 +1479,12 @@ ${basePayNote}`.trim();
 *𔘓* keterangan : ${ket}
 
 ${basePayNote}`;
-      }
-      else { // sharing
+      } else {
         const apk = requireVal(qs("#s_apk")?.value);
         const device = requireVal(qs("#s_device")?.value);
         const lokasi = requireVal(qs("#s_lokasi")?.value);
         const ket = requireVal(qs("#s_ket")?.value);
         if (!apk || !device || !lokasi || !ket) return alert("Harap isi semua field wajib (*)");
-
         msg =
 `•┈  *format app sharing* ┈•
 
@@ -1563,49 +1507,33 @@ ${basePayNote}`;
       openPayModal();
     });
 
-    // klik "Kirim" -> notif + WA (tanpa upload bukti)
-  // =====================================
-// KLIK 1: TAMPILKAN NOTIF (tidak ke WA)
-// KLIK 2: BARU BUKA WHATSAPP
-// =====================================
-let stepToWA = 0; // 0 = belum, 1 = siap ke WA
+    // =========================
+    // QRIS OVERLAY (Buka QRIS + X close)
+    // =========================
+    const qrisView = qs("#qrisView");
+    const qrisBigImg = qs("#qrisBigImg");
+    const closeQrisBtn = qs("#closeQrisBtn");
 
-sendPaid?.addEventListener("click", () => {
-  if (!waFinalMessage) return alert("Data order belum ada. Isi format dulu.");
+    function openQrisView(){
+      if (qrisBigImg) qrisBigImg.src = QRIS_IMAGE_URL;
+      qrisView.classList.add("show");
+      qrisView.setAttribute("aria-hidden","false");
+    }
+    function closeQrisView(){
+      qrisView.classList.remove("show");
+      qrisView.setAttribute("aria-hidden","true");
+    }
+    closeQrisBtn?.addEventListener("click", closeQrisView);
+    qrisView?.addEventListener("click", (e)=>{ if(e.target === qrisView) closeQrisView(); });
+    document.addEventListener("keydown", (e)=>{ if(e.key === "Escape" && qrisView.classList.contains("show")) closeQrisView(); });
 
-  const isPaid = paidYes?.checked === true;
-  if (!isPaid) return;
-
-  // KLIK PERTAMA: tampilkan notif dulu
-  if (stepToWA === 0) {
-    if (paidNotif) paidNotif.style.display = "block";
-
-    // scroll ke atas biar notif kebaca
-    const body = payModal?.querySelector(".modal-body");
-    if (body) body.scrollTo({ top: 0, behavior: "smooth" });
-
-    stepToWA = 1;                 // next klik baru ke WA
-    sendPaid.textContent = "Lanjut WhatsApp";
-    return;
-  }
-
-  // KLIK KEDUA: baru buka WA
-  const finalMsg =
-`${waFinalMessage}
-
-🔔 *Konfirmasi pembayaran:* SUDAH BAYAR
-⏳ Status: Menunggu admin proses.`.trim();
-
-  window.open(waLink(finalMsg), "_blank", "noopener,noreferrer");
-  closePayModal();
-  closeBuyModal();
-
-  // reset
-  stepToWA = 0;
-  if (sendPaid) sendPaid.textContent = "Kirim";
-});
-
-
+    // klik tombol "Buka QRIS" => buka overlay + tetap bisa open tab
+    qrisHref?.addEventListener("click", (e) => {
+      // buka overlay
+      openQrisView();
+      // kalau kamu mau JANGAN buka tab baru, aktifkan baris ini:
+      // e.preventDefault();
+    });
 
     // init
     document.addEventListener("DOMContentLoaded", () => {
