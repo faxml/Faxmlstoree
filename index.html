@@ -111,6 +111,16 @@ a{ color:inherit; text-decoration:none; }
 .nav-links a:hover{ color: var(--text); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10); }
 
 .nav-cta{ display:flex; gap:10px; align-items:center; flex:0 0 auto; }
+/* Biar anchor gak ketutup sticky nav */
+#beranda, #produk, #services, #faq{
+  scroll-margin-top: 110px;
+}
+
+@media (max-width: 640px){
+  #beranda, #produk, #services, #faq{
+    scroll-margin-top: 140px;
+  }
+}
 
 .search{
   display:flex; align-items:center; gap:8px; padding: 8px 10px;
@@ -837,6 +847,24 @@ section{ padding:18px 0 24px; }
   border:1px solid rgba(255,255,255,.12);
   background: rgba(255,255,255,.04);
 }
+.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .6s ease, transform .6s ease;
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  body {
+    opacity: 1;
+    transition: opacity .25s ease;
+  }
+
+  body.is-leaving {
+    opacity: 0;
+  }
 </style>
 </head>
 
@@ -854,11 +882,14 @@ section{ padding:18px 0 24px; }
       <nav class="nav-links" aria-label="Navigasi utama">
         <a href="#beranda">Beranda</a>
         <a href="#produk">Produk</a>
+        <a href="#services">Service</a>
         <a href="#faq">FAQ</a>
+       
+
       </nav>
 
       <div class="search" role="search">
-        <span class="s-ico">🔎</span>
+        <span class="s-ico"></span>
         <input id="searchInput" type="search" placeholder="Cari produk..." autocomplete="off">
         <button class="s-clear" id="searchClear" type="button" aria-label="Hapus">✕</button>
       </div>
@@ -875,7 +906,10 @@ section{ padding:18px 0 24px; }
     <div class="mobile glass" id="mobileMenu" aria-label="Menu mobile">
       <a href="#beranda">Beranda</a>
       <a href="#produk">Produk</a>
+      <a href="#services">Service</a>
       <a href="#faq">FAQ</a>
+  
+
     </div>
   </header>
 
@@ -1344,6 +1378,32 @@ section{ padding:18px 0 24px; }
   </div>
 
   <script>
+    const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) entry.target.classList.add('is-visible');
+    }
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+   document.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+
+    const url = a.getAttribute('href');
+    if (!url || url.startsWith('#') || a.target === '_blank') return;
+
+    // untuk link internal saja
+    if (a.origin !== location.origin) return;
+
+    e.preventDefault();
+    document.body.classList.add('is-leaving');
+
+    setTimeout(() => {
+      location.href = url;
+    }, 220);
+  });
+
     /* =========================
        TYPING EFFECT LOOP (H1)
        ========================= */
@@ -1945,6 +2005,18 @@ ${basePayNote}`;
       renderProducts(products);
       applySearch("");
     });
+
+     document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      const target = document.querySelector(id);
+      if (!target) return;
+
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', id);
+    });
+  });
   </script>
 </body>
 </html>
