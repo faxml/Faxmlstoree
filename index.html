@@ -1129,6 +1129,92 @@ section{ padding:18px 0 24px; }
 
 /* biar card ga ketutup tombol WA */
 main.container{ padding-bottom: 90px; }
+/* =========================
+   MOBILE PERF LITE (FINAL)
+   - hilangkan "ngerem/stop" iPhone & Android
+========================= */
+
+html{ scroll-behavior: auto !important; } /* jangan dobel smooth */
+body{ overflow-x:hidden; }
+
+/* Matikan blur/animasi berat khusus mobile */
+@media (max-width: 768px){
+
+  /* 1) Matikan ANIMASI background besar (ini biang stutter paling sering) */
+  body{
+    animation: none !important;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+    background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0% !important;
+  }
+
+  /* 2) Matikan FX overlay (shimmer + particles) */
+  .fx-overlay{ display:none !important; }
+
+  /* 3) Matikan blur di elemen fixed/sticky/modal/sidebar/overlay */
+  .glass,
+  #topNav,
+  .nav-inner,
+  #mobileMenu,
+  .menu-overlay,
+  .modal-overlay,
+  .modal,
+  .modal-footer,
+  .qris-view,
+  .qris-box{
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* 4) Ganti "glass" jadi transparan solid (tetap keren tapi enteng) */
+  .glass,
+  .nav-inner{
+    background: rgba(10,14,30,.82) !important;
+    border-color: rgba(255,255,255,.14) !important;
+  }
+
+  /* Sidebar juga jangan blur */
+  #mobileMenu{
+    background: rgba(8,10,22,.92) !important;
+  }
+
+  /* 5) Ringankan shadow besar */
+  .card,
+  .nav-inner,
+  #mobileMenu,
+  .modal,
+  .footer-wrap{
+    box-shadow: 0 10px 24px rgba(0,0,0,.35) !important;
+  }
+
+  /* 6) Matikan hover transform (mobile ga butuh) */
+  .card:hover,
+  .btn:hover,
+  .faq-btn:hover,
+  .f-social a:hover{
+    transform: none !important;
+  }
+
+  /* 7) Kurangi will-change yang kebanyakan (Safari kadang ngelag) */
+  .card, .btn, .faq-btn, #mobileMenu, .modal{
+    will-change: auto !important;
+  }
+
+  /* 8) Matikan animasi icon melayang di hero */
+  .app-float{ animation: none !important; }
+}
+
+/* Reduce motion juga aman */
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+/* STOP “SCROLL SENDIRI” (scroll anchoring + layout shift) */
+html, body{ overflow-anchor: none; }
+
+/* kunci tinggi judul hero biar gak dorong konten produk */
+#beranda .hero-card h1{ min-height: 3.6em; }
+@media (min-width: 900px){
+  #beranda .hero-card h1{ min-height: 2.4em; }
+}
 
 </style>
 </head>
@@ -1657,43 +1743,23 @@ const todayISO = () => {
   return `${d.getFullYear()}-${mm}-${dd}`;
 };
 
-/* ========= typing effect ========= */
-(function typingLoop(){
+/* ========= typing effect (ONCE, NO DELETE) ========= */
+(function typingOnce(){
   const el = qs("#typeTarget");
   if(!el) return;
 
   const text = "Jual Aplikasi Premium, Aman, dan Tepercaya.";
   const typeSpeed = 55;
-  const deleteSpeed = 28;
-  const pauseAfterType = 1200;
-  const pauseAfterDelete = 450;
 
   let i = 0;
-  let deleting = false;
-
   function tick(){
-    if(!deleting){
-      el.textContent = text.slice(0, i + 1);
-      i++;
-      if(i === text.length){
-        deleting = true;
-        setTimeout(tick, pauseAfterType);
-        return;
-      }
-      setTimeout(tick, typeSpeed);
-    }else{
-      el.textContent = text.slice(0, i - 1);
-      i--;
-      if(i === 0){
-        deleting = false;
-        setTimeout(tick, pauseAfterDelete);
-        return;
-      }
-      setTimeout(tick, deleteSpeed);
-    }
+    el.textContent = text.slice(0, i + 1);
+    i++;
+    if(i < text.length) setTimeout(tick, typeSpeed);
   }
   tick();
 })();
+
 
 /* ========= FX overlay ========= */
 (() => {
@@ -1739,18 +1805,60 @@ document.addEventListener("click", (e) => {
   if (ico) ico.textContent = isOpen ? "−" : "+";
 }, { passive:true });
 
-/* ========= Smooth anchor + close sidebar ========= */
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', (e) => {
-    const id = a.getAttribute('href');
+/* =========================
+   SMOOTH SCROLL (FINAL iOS/Android)
+   - offset sticky nav
+   - close sidebar dulu
+   - pakai window.scrollTo (lebih stabil)
+========================= */
+(() => {
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    const h = nav ? nav.getBoundingClientRect().height : 0;
+    return Math.round(h + 18);
+  }
+
+  function smoothTo(el){
+    const y = window.pageYOffset + el.getBoundingClientRect().top - navOffset();
+    if (prefersReduce) return window.scrollTo(0, y);
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+
     const target = document.querySelector(id);
     if (!target) return;
 
     e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    history.pushState(null, '', id);
+
+    // Tutup sidebar kalau kebuka
+    const menu = document.getElementById("mobileMenu");
+    const overlay = document.getElementById("menuOverlay");
+    const burger = document.getElementById("hamburger");
+
+    if (menu?.classList.contains("open")){
+      menu.classList.remove("open");
+      overlay?.classList.remove("show");
+      burger?.setAttribute("aria-expanded", "false");
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      setTimeout(() => smoothTo(target), 70);
+    }else{
+      smoothTo(target);
+    }
+
+    // optional: update hash tanpa "loncat"
+    history.replaceState(null, "", id);
   }, { passive:false });
-});
+})();
+
 
 /* ========= iOS/Android SCROLL LOCK (no jitter) ========= */
 function lockScroll(){
