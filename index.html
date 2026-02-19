@@ -1139,6 +1139,94 @@ main.container{ padding-bottom: 90px; }
   .btn .btn-spin{ animation:none !important; }
 }
 
+/* ===== RAPihin GRID PRODUK di MOBILE ===== */
+@media (max-width: 640px){
+
+  /* 1) Grid 2 kolom rapih */
+  .products-grid, .grid-products, #productsGrid{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+  }
+
+  /* 2) Card dibuat flex kolom biar tombol bisa “nempel bawah” */
+  .product-card, .card, .product{
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
+  /* 3) Thumbnail gambar konsisten (biar tinggi gambar sama) */
+  .product-thumb, .thumb, .cover{
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+  .product-thumb img, .thumb img, .cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+@media (max-width: 640px){
+
+  /* gambar (punyamu sekarang cuma display:block, tambah ini biar aman) */
+  .product-thumb img, .thumb img, .cover img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Judul: batasi 2 baris (tanpa webkit) */
+  #productsGrid h3,
+  .products-grid h3,
+  .grid-products h3,
+  .product-grid h3{
+    line-height: 1.25;
+    max-height: calc(1.25em * 2); /* 2 baris */
+    overflow: hidden;
+  }
+
+  /* Deskripsi: batasi 3 baris (tanpa webkit) */
+  #productsGrid p,
+  .products-grid p,
+  .grid-products p,
+  .product-grid p{
+    line-height: 1.35;
+    max-height: calc(1.35em * 3); /* 3 baris */
+    overflow: hidden;
+  }
+}
+
+
+
+  /* 5) Dorong bagian aksi (harga/detail/beli) ke bawah */
+  .product-bottom, .actions, .card-actions{
+    margin-top: auto !important;
+  }
+
+  /* 6) Tombol beli full lebar biar konsisten */
+  .buy-btn, .btn-buy, .primary{
+    width: 100% !important;
+  }
+
+  /* 7) Kasih ruang bawah supaya tidak ketiban tombol WA */
+  .products-wrap, .products, main{
+    padding-bottom: 92px !important;
+  }
+}
+
+/* ===== posisi tombol WA biar tidak nutup tombol beli ===== */
+.wa-float, .whatsapp-float, .waButton, .float-wa{
+  bottom: 18px !important;     /* naikin dikit */
+  right: 16px !important;
+}
+
+
 </style>
 </head>
 
@@ -1951,6 +2039,9 @@ function renderProducts(list) {
           </div>
           <a class="btn" href="#faq">Detail</a>
         </div>
+<div class="product-bottom">
+  <!-- harga + detail + tombol beli -->
+</div>
 
         ${
           ready
@@ -2481,6 +2572,43 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts(products);
   applySearch("");
 }, { passive:true });
+(function(){
+  function mark(){
+    const btns = Array.from(document.querySelectorAll("a,button"))
+      .filter(el => /beli sekarang/i.test(el.textContent || ""));
+
+    btns.forEach(btn => {
+      // cari card terdekat
+      const card = btn.closest(".product-card, .product, .card, article, li, div");
+      if(!card) return;
+
+      card.classList.add("p-card");
+
+      // wrapper grid (parent yang isinya banyak card)
+      const grid = card.parentElement;
+      if(grid && grid.children && grid.children.length >= 2){
+        grid.classList.add("p-grid");
+      }
+
+      // title & desc di dalam card
+      const title = card.querySelector(".product-title, .title, h3, h2, h4");
+      if(title) title.classList.add("p-title");
+
+      const desc  = card.querySelector(".product-desc, .desc, p");
+      if(desc) desc.classList.add("p-desc");
+
+      // actions area (tempat tombol)
+      const actions = btn.closest(".product-bottom, .actions, .card-actions") || btn.parentElement;
+      if(actions) actions.classList.add("p-actions");
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    mark();
+    setTimeout(mark, 300);   // kalau produk render async
+    setTimeout(mark, 1000);
+  });
+})();
 </script>
 </body>
 </html>
