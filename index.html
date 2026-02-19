@@ -1077,6 +1077,68 @@ main.container{ padding-bottom: 90px; }
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior:auto !important; }
 }
+/* ===== LOADING sebelum QRIS muncul ===== */
+.loading-view{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0,0,0,.65);
+  z-index: 10020; /* di atas modal */
+}
+.loading-view.show{ display:flex; }
+
+.loading-card{
+  width: min(380px, 100%);
+  padding: 18px 16px;
+  border-radius: 18px;
+  text-align: center;
+}
+
+.loading-spinner{
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 4px solid rgba(255,255,255,.18);
+  border-top-color: rgba(117,83,255,.95);
+  animation: spin .8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.loading-title{
+  margin: 0 0 4px;
+  font-weight: 900;
+}
+.loading-sub{
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ===== LOADING di tombol "Lanjut Pembayaran" ===== */
+.btn.is-loading{
+  pointer-events: none;
+  opacity: .9;
+}
+.btn .btn-spin{
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 3px solid rgba(255,255,255,.25);
+  border-top-color: rgba(255,255,255,.92);
+  animation: spin .7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .loading-spinner,
+  .btn .btn-spin{ animation:none !important; }
+}
+
 </style>
 </head>
 
@@ -1504,6 +1566,14 @@ main.container{ padding-bottom: 90px; }
       </div>
     </div>
   </div>
+<!-- LOADING VIEW (sebelum QRIS muncul) -->
+<div id="loadingView" class="loading-view" aria-hidden="true">
+  <div class="loading-card glass">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <p class="loading-title">Menyiapkan pembayaran…</p>
+    <p class="loading-sub">Mohon tunggu sebentar</p>
+  </div>
+</div>
 
   <!-- PAYMENT MODAL (QRIS) -->
   <div id="payModal" class="modal-overlay" aria-hidden="true">
@@ -2268,6 +2338,119 @@ ${basePayNote}`;
   buyModal.setAttribute("aria-hidden", "true");
   openPayModal();
 }, { passive:false });
+
+/* ===== FINAL PATCH: tombol loading + overlay loading sebelum QRIS ===== */
+(() => {
+  if (window.__FAXML_LOADING_PATCH__) return;
+  window.__FAXML_LOADING_PATCH__ = true;
+
+  const loadingView = document.getElementById("loadingView");
+  const sendBtn = document.getElementById("sendBtn");     // tombol "Lanjut Pembayaran"
+  const buyForm = document.getElementById("buyForm");
+  const buyModalEl = document.getElementById("buyModal");
+  if (!loadingView || !sendBtn || !buyForm || !buyModalEl) return;
+
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  const LOADING_SECONDS = 2; // durasi loading (detik)
+  const LOADING_DELAY   = prefersReduce ? 0 : Math.round(LOADING_SECONDS * 1000);
+
+
+  let token = 0;
+  let btnOldHTML = "";
+  let btnOldDisabled = false;
+
+  const showOverlay = () => {
+    loadingView.classList.add("show");
+    loadingView.setAttribute("aria-hidden", "false");
+  };
+  const hideOverlay = () => {
+    loadingView.classList.remove("show");
+    loadingView.setAttribute("aria-hidden", "true");
+  };
+
+  const setBtnLoading = (on) => {
+    if (!sendBtn) return;
+    if (on) {
+      // simpan state awal
+      if (!btnOldHTML) btnOldHTML = sendBtn.innerHTML;
+      btnOldDisabled = sendBtn.disabled;
+
+      sendBtn.disabled = true;
+      sendBtn.classList.add("is-loading");
+      sendBtn.innerHTML = `<span class="btn-spin" aria-hidden="true"></span><span>Memproses…</span>`;
+    } else {
+      // restore
+      if (btnOldHTML) sendBtn.innerHTML = btnOldHTML;
+      sendBtn.disabled = btnOldDisabled;
+      sendBtn.classList.remove("is-loading");
+
+      // reset cache supaya aman kalau HTML berubah dari luar
+      btnOldHTML = "";
+      btnOldDisabled = false;
+    }
+  };
+
+  // Saat submit (klik "Lanjut Pembayaran"), tampilkan loading di tombol.
+  // Kalau validasi gagal (modal tetap terbuka), auto balik normal.
+  buyForm.addEventListener("submit", () => {
+    const my = ++token;
+    setBtnLoading(true);
+
+    // tunggu sebentar: kalau buyModal masih "show", berarti handler lama return karena alert/validasi
+    setTimeout(() => {
+      if (my !== token) return;
+      const stillOpen = buyModalEl.classList.contains("show");
+      if (stillOpen) {
+        setBtnLoading(false);
+        hideOverlay();
+      }
+    }, 220);
+  }, true);
+
+  // Patch openPayModal: overlay loading dulu, baru QRIS.
+  if (typeof window.openPayModal === "function") {
+    const _openPayModal = window.openPayModal;
+
+    window.openPayModal = function () {
+      const my = ++token;
+
+      // overlay tampil setelah buy modal ketutup (biar tombol sempat kelihatan)
+      setTimeout(() => {
+        if (my !== token) return;
+        showOverlay();
+      }, prefersReduce ? 0 : 120);
+
+      setTimeout(() => {
+        if (my !== token) return;
+        hideOverlay();
+        setBtnLoading(false);
+        _openPayModal();
+      }, LOADING_DELAY);
+    };
+  }
+
+  // Safety: kalau pay modal ditutup, pastikan overlay/tombol normal lagi
+  if (typeof window.closePayModal === "function") {
+    const _closePayModal = window.closePayModal;
+    window.closePayModal = function () {
+      token++;
+      hideOverlay();
+      setBtnLoading(false);
+      _closePayModal();
+    };
+  }
+
+  // Safety: kalau buy modal ditutup (cancel/esc), matikan loading juga
+  if (typeof window.closeBuyModal === "function") {
+    const _closeBuyModal = window.closeBuyModal;
+    window.closeBuyModal = function () {
+      token++;
+      hideOverlay();
+      setBtnLoading(false);
+      _closeBuyModal();
+    };
+  }
+})();
 
 /* ========= QRIS Overlay ========= */
 const qrisView = qs("#qrisView");
