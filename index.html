@@ -657,7 +657,42 @@ section{ padding:18px 0 24px; }
   .app-float{ width:22px; height:22px; border-radius:8px; }
 }
 @media (prefers-reduced-motion: reduce){ .app-float{ animation:none!important; } }
+/* =========================
+   APP FLOAT - MOBILE VERSION
+   tempel PALING BAWAH CSS
+========================= */
+@media (max-width: 640px), (hover:none) and (pointer:coarse){
 
+  /* container ikon */
+  .app-float-wrap{
+    right: 10px;
+    top: 118px;              /* kalau kurang pas: naik/turunin angka ini */
+    width: 150px;
+    height: 120px;
+    opacity: .90;
+  }
+
+  /* ukuran ikon */
+  .app-float{
+    width: 22px;
+    height: 22px;
+    border-radius: 8px;
+
+    /* paksa animasi tetap jalan di mobile */
+    animation-play-state: running !important;
+    transform: translate3d(0,0,0);
+  }
+
+  /* posisikan ulang biar lebih rapat & rapi di container kecil */
+  .app-float.a1{ left: 92px; top:  6px;  --dx: 8px;  --dy:-12px; --rot:-10deg; --op:.62; animation: appDrift 4.4s ease-in-out infinite !important; }
+  .app-float.a2{ left:122px; top: 24px; --dx:-9px;  --dy:-12px; --rot: 10deg; --op:.55; animation: appDrift 5.2s ease-in-out infinite !important; }
+  .app-float.a3{ left: 70px; top: 28px; --dx: 9px;  --dy:-11px; --rot: -6deg; --op:.58; animation: appDrift 4.2s ease-in-out infinite !important; }
+  .app-float.a4{ left:106px; top: 52px; --dx:-8px;  --dy:-11px; --rot: 12deg; --op:.50; animation: appDrift 5.8s ease-in-out infinite !important; }
+  .app-float.a5{ left: 42px; top: 12px; --dx: 8px;  --dy:-12px; --rot:  6deg; --op:.48; animation: appDrift 6.0s ease-in-out infinite !important; }
+  .app-float.a6{ left: 18px; top: 48px; --dx:-8px;  --dy:-10px; --rot:-12deg; --op:.46; animation: appDrift 4.8s ease-in-out infinite !important; }
+  .app-float.a7{ left: 54px; top: 70px; --dx: 7px;  --dy:-10px; --rot: 10deg; --op:.44; animation: appDrift 6.4s ease-in-out infinite !important; }
+  .app-float.a8{ left:126px; top: 82px; --dx: 9px;  --dy:-10px; --rot: -8deg; --op:.42; animation: appDrift 5.0s ease-in-out infinite !important; }
+}
 /* SERVICE + FAQ + FOOTER */
 .service-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
 @media (max-width: 980px){ .service-grid{ grid-template-columns: 1fr; } }
@@ -1137,7 +1172,9 @@ main.container{ padding-bottom: 90px; }
 @media (prefers-reduced-motion: reduce){
   .loading-spinner,
   .btn .btn-spin{ animation:none !important; }
+  
 }
+
 /* ===== SMOOTH PATCH V2 (anti bentrok + lebih ringan di mobile) ===== */
 
 /* jangan pakai CSS smooth (biar JS yang handle) */
@@ -1178,6 +1215,204 @@ html{ scroll-behavior: auto !important; }
 
 /* dorong harga+detail+button ke bawah biar sejajar */
 .price-row{ margin-top:auto; }
+/* ===== ACTIVE NAV (nyala sesuai section) ===== */
+.nav-links a.active{
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+  border-color: rgba(117,83,255,.35);
+  box-shadow: 0 10px 26px rgba(117,83,255,.16);
+}
+
+#mobileMenu .mobile-links a.active{
+  border-color: rgba(117,83,255,.35);
+  background: rgba(117,83,255,.10);
+}
+
+/* ===== SECTION FLASH (efek fokus setelah klik menu) ===== */
+.section-flash{
+  outline: 2px solid rgba(117,83,255,.35);
+  outline-offset: 10px;
+  border-radius: 22px;
+  animation: flashOut .9s ease forwards;
+}
+@keyframes flashOut{
+  0%{ outline-color: rgba(117,83,255,.55); }
+  100%{ outline-color: rgba(117,83,255,0); }
+}
+
+/* ===== EMPTY STATE PRODUK ===== */
+.grid-empty{
+  grid-column: 1 / -1;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.80);
+  font-weight: 900;
+}
+
+/* ===== DETAIL MODAL CONTENT ===== */
+.detail-top{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+}
+.detail-thumb{
+  width:72px;
+  height:72px;
+  border-radius: 16px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.03);
+  flex: 0 0 auto;
+}
+.detail-thumb img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+.detail-meta h4{
+  margin:0 0 4px;
+  font-size:16px;
+  letter-spacing:-.2px;
+}
+.detail-meta .mut{
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.detail-price{
+  margin-top: 8px;
+  font-weight: 900;
+  font-size: 18px;
+}
+.detail-list{
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: rgba(255,255,255,.78);
+  font-weight: 800;
+  font-size: 14px;
+}
+.detail-list li{ margin: 6px 0; }
+/* =========================
+   DETAIL MODAL - MOBILE FIX
+   tempel PALING BAWAH CSS
+========================= */
+#detailModal .modal-close{
+  display:grid;
+  place-items:center;
+  line-height: 1;
+}
+
+#detailModal .detail-meta{ min-width:0; } /* penting biar teks gak “ngaco” */
+
+@media (max-width: 640px){
+
+  /* modal lebih pas di hp */
+  #detailModal .modal{
+    width: min(520px, calc(100% - 18px));
+    border-radius: 18px;
+    max-height: min(84vh, 680px);
+  }
+
+  #detailModal .modal-header{
+    padding: 12px 12px;
+  }
+
+  #detailModal .modal-body{
+    padding: 12px;
+  }
+
+  /* kartu atas (thumb + info) dirapikan */
+  #detailModal .detail-top{
+    gap: 10px;
+    padding: 10px;
+    border-radius: 14px;
+    align-items: flex-start;
+  }
+
+  #detailModal .detail-thumb{
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+  }
+
+  #detailModal .detail-meta h4{
+    margin: 0 0 3px;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+
+  #detailModal .detail-meta .mut{
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  /* harga biar gak “pecah aneh” */
+  #detailModal .detail-price{
+    margin-top: 6px;
+    font-size: 16px;
+    display:flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* list poin biar gak terlalu masuk ke kiri */
+  #detailModal .detail-list{
+    margin: 10px 0 0;
+    padding-left: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  /* tombol bawah rapi & tinggi enak */
+  #detailModal .modal-footer{
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  #detailModal .modal-footer .btn{
+    min-height: 44px;
+    border-radius: 14px;
+    font-size: 13px;
+  }
+}
+
+/* extra kecil: kalau hp sempit banget, bikin layout jadi kolom */
+@media (max-width: 640px){
+
+  /* jadikan card atas jadi kolom */
+  #detailModal .detail-top{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* gambar jadi lebar */
+  #detailModal .detail-thumb{
+    width: 100% !important;
+    height: 160px !important;      /* bisa 150-190 sesuai selera */
+    border-radius: 16px;
+  }
+
+  /* gambar cover biar penuh */
+  #detailModal .detail-thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;             /* penuh (lebih keren) */
+    object-position: center;
+  }
+
+  /* teks di bawah gambar */
+  #detailModal .detail-meta h4{
+    margin-top: 6px;
+  }
+}
 </style>
 </head>
 
@@ -1605,6 +1840,22 @@ html{ scroll-behavior: auto !important; }
       </div>
     </div>
   </div>
+  <!-- DETAIL MODAL -->
+<div id="detailModal" class="modal-overlay" aria-hidden="true">
+  <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="modal-header">
+      <h3 id="detailTitle">Detail Produk</h3>
+      <button id="closeDetail" class="modal-close" type="button" aria-label="Tutup">✕</button>
+    </div>
+
+    <div class="modal-body" id="detailBody"></div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn" id="detailCloseBtn">Tutup</button>
+      <button type="button" class="btn primary" id="detailBuyBtn">Beli Sekarang</button>
+    </div>
+  </div>
+</div>
 <!-- LOADING VIEW (sebelum QRIS muncul) -->
 <div id="loadingView" class="loading-view" aria-hidden="true">
   <div class="loading-card glass">
@@ -1964,9 +2215,24 @@ const products = [
    { brand:"zoom", label:"ZOOM", name:"Zoom Premium Private", duration:"14 Hari", price:15000, stock:20, tag:"Original", img:"img/zoom.png" },
 ];
 
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-detail]");
+  if (!b) return;
+
+  const name = b.getAttribute("data-name");
+  const p = products.find(x => x.name === name);
+  if (!p) return;
+
+  openDetailModal(p);
+});
+
 function renderProducts(list) {
   const productGrid = qs("#productGrid");
   if (!productGrid) return;
+  if (!list.length){
+  productGrid.innerHTML = `<div class="grid-empty">Tidak ada produk yang cocok dengan pencarian kamu.</div>`;
+  return;
+}
 
   productGrid.innerHTML = list.map((p) => {
     const ready = (Number(p.stock) || 0) > 0;
@@ -1991,7 +2257,13 @@ function renderProducts(list) {
             <span class="price">${formatRupiah(p.price)}</span>
             <span class="tiny">/${p.duration}</span>
           </div>
-          <a class="btn" href="#faq">Detail</a>
+          <button class="btn" type="button"
+  data-detail
+  data-name="${p.name}"
+  data-brand="${p.brand}"
+  data-price="${p.price}"
+  data-duration="${p.duration}"
+>Detail</button>
         </div>
 
         ${
@@ -2009,7 +2281,108 @@ function renderProducts(list) {
     `;
   }).join("");
 }
+/* ========= ACTIVE NAV (ikut section) ========= */
+(() => {
+  const ids = ["beranda","produk","services","faq"];
+  const sections = ids.map(id => document.getElementById(id)).filter(Boolean);
 
+  const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const mobLinks = [...document.querySelectorAll('#mobileMenu .mobile-links a[href^="#"]')];
+  const allLinks = [...navLinks, ...mobLinks];
+
+  function setActive(hash){
+    allLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === hash));
+  }
+
+  // set awal
+  setActive(location.hash && document.querySelector(location.hash) ? location.hash : "#beranda");
+
+  const obs = new IntersectionObserver((entries) => {
+    // ambil entry yang paling “terlihat”
+    const visible = entries.filter(e => e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+    if (!visible) return;
+    setActive("#" + visible.target.id);
+  }, { rootMargin: "-35% 0px -55% 0px", threshold: [0.01, 0.05, 0.1] });
+
+  sections.forEach(s => obs.observe(s));
+
+  // expose kalau mau dipakai manual
+  window.__setActiveNav = setActive;
+})();
+
+/* ========= DETAIL MODAL ========= */
+const detailModal = qs("#detailModal");
+const detailBody  = qs("#detailBody");
+const closeDetail = qs("#closeDetail");
+const detailCloseBtn = qs("#detailCloseBtn");
+const detailBuyBtn = qs("#detailBuyBtn");
+
+let detailProduct = null;
+
+function anyOverlayOpen(){
+  return (
+    qs("#buyModal")?.classList.contains("show") ||
+    qs("#payModal")?.classList.contains("show") ||
+    qs("#qrisView")?.classList.contains("show") ||
+    qs("#detailModal")?.classList.contains("show") ||
+    qs("#mobileMenu")?.classList.contains("open")
+  );
+}
+
+function openDetailModal(p){
+  detailProduct = p;
+  if (!detailBody) return;
+
+  const priceTxt = formatRupiah(p.price);
+  detailBody.innerHTML = `
+    <div class="detail-top">
+      <div class="detail-thumb">
+        <img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
+      </div>
+      <div class="detail-meta">
+        <h4>${p.name}</h4>
+        <div class="mut">${p.label || p.brand} • ${p.duration} • Tag: ${p.tag}</div>
+        <div class="detail-price">${priceTxt} <span style="color:var(--muted);font-size:12px;font-weight:900;">/ ${p.duration}</span></div>
+      </div>
+    </div>
+
+    <ul class="detail-list">
+      <li>Akses premium sesuai paket.</li>
+      <li>Konfirmasi stok ke admin sebelum bayar QRIS.</li>
+      <li>Support untuk kendala umum sesuai jam layanan.</li>
+    </ul>
+  `;
+
+  detailModal.classList.add("show");
+  detailModal.setAttribute("aria-hidden","false");
+  lockScroll();
+}
+
+function closeDetailModal(){
+  if (!detailModal?.classList.contains("show")) return;
+  detailModal.classList.remove("show");
+  detailModal.setAttribute("aria-hidden","true");
+  detailBody && (detailBody.innerHTML = "");
+  detailProduct = null;
+
+  // unlock kalau tidak ada overlay lain
+  if (!anyOverlayOpen()) unlockScroll();
+}
+
+closeDetail?.addEventListener("click", closeDetailModal, { passive:true });
+detailCloseBtn?.addEventListener("click", closeDetailModal, { passive:true });
+detailModal?.addEventListener("click", (e)=>{ if(e.target === detailModal) closeDetailModal(); }, { passive:true });
+
+detailBuyBtn?.addEventListener("click", () => {
+  if (!detailProduct) return;
+  closeDetailModal();
+  openBuyModal({
+    product: detailProduct.name,
+    brand: detailProduct.brand,
+    price: detailProduct.price,
+    duration: detailProduct.duration
+  });
+}, { passive:true });
 /* ========= Search ========= */
 const searchInput = qs("#searchInput");
 const searchClear = qs("#searchClear");
