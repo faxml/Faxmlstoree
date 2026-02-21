@@ -1155,7 +1155,29 @@ html{ scroll-behavior: auto !important; }
   /* sedikit ringankan shadow */
   .glass{ box-shadow: 0 12px 34px rgba(0,0,0,.38) !important; }
 }
+/* card tetap sejajar */
+.card{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
 
+/* batasi judul max 2 baris TANPA line-clamp */
+.card h3{
+  line-height: 1.25;
+  max-height: calc(1.25em * 2); /* 2 baris */
+  overflow: hidden;
+}
+
+/* batasi deskripsi max 3 baris TANPA line-clamp */
+.card p{
+  line-height: 1.55;
+  max-height: calc(1.55em * 3); /* 3 baris */
+  overflow: hidden;
+}
+
+/* dorong harga+detail+button ke bawah biar sejajar */
+.price-row{ margin-top:auto; }
 </style>
 </head>
 
@@ -1840,11 +1862,13 @@ mobileMenu?.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("cl
 (() => {
   const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  function navOffset(){
-    const nav = document.getElementById("topNav");
-    const h = nav ? nav.getBoundingClientRect().height : 0;
-    return Math.round(h + 18);
-  }
+function navOffset(){
+  const nav = document.getElementById("topNav");
+  if (!nav) return 170;
+  // r.bottom sudah termasuk posisi sticky top + safe area, jadi offset lebih akurat di iPhone
+  const r = nav.getBoundingClientRect();
+  return Math.round(r.bottom + 12);
+}
 
   function smoothTo(el){
     const y = window.pageYOffset + el.getBoundingClientRect().top - navOffset();
