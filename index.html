@@ -1313,7 +1313,7 @@ html{ scroll-behavior: auto !important; }
     <section id="faq">
       <div class="section-head">
         <div><h2>FAQ</h2></div>
-        <a class="btn" href="#beranda">Kembali ke atas</a>
+        <a class="btn" href="#faq">Kembali ke atas</a>
       </div>
 
       <div class="faq-grid">
@@ -2623,6 +2623,98 @@ document.addEventListener("DOMContentLoaded", () => {
     e.stopImmediatePropagation();
     goToHash(id);
   }, true);
+})();
+/* ===== FORCE NAVIGATION FIX (FAQ pasti kebuka) ===== */
+(() => {
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    if (!nav) return 170;
+    const r = nav.getBoundingClientRect();
+    return Math.round(r.bottom + 12); // lebih akurat di iPhone
+  }
+
+  function anyOverlayOpen(){
+    return (
+      document.getElementById("buyModal")?.classList.contains("show") ||
+      document.getElementById("payModal")?.classList.contains("show") ||
+      document.getElementById("qrisView")?.classList.contains("show") ||
+      document.getElementById("mobileMenu")?.classList.contains("open")
+    );
+  }
+
+  function forceUnlockIfSafe(){
+    const isFixed = getComputedStyle(document.body).position === "fixed";
+    if (isFixed && !anyOverlayOpen() && typeof window.unlockScroll === "function") {
+      window.unlockScroll();
+    }
+  }
+
+  function scrollToHash(id){
+    const target = document.querySelector(id);
+    if (!target) return;
+
+    forceUnlockIfSafe();
+
+    const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
+    const opt = prefersReduce ? { top:y } : { top:y, behavior:"smooth" };
+    window.scrollTo(opt);
+
+    // iOS kadang perlu 2x supaya bener-bener nyampe
+    setTimeout(() => {
+      forceUnlockIfSafe();
+      const y2 = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
+      const opt2 = prefersReduce ? { top:y2 } : { top:y2, behavior:"smooth" };
+      window.scrollTo(opt2);
+    }, 140);
+  }
+
+  function closeMenuThen(cb){
+    const menu = document.getElementById("mobileMenu");
+    if (!menu || !menu.classList.contains("open")) return cb();
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      menu.removeEventListener("transitionend", finish);
+      cb();
+    };
+
+    menu.addEventListener("transitionend", finish);
+    setTimeout(finish, 420);
+
+    // pakai fungsi yang sudah ada
+    if (typeof window.closeMenu === "function") window.closeMenu();
+    else menu.classList.remove("open");
+  }
+
+  // Tangkap semua klik anchor #... dan PAKSA scroll
+  window.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    if (!document.querySelector(id)) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    closeMenuThen(() => {
+      // update URL tanpa bikin jump
+      history.replaceState(null, "", id);
+      requestAnimationFrame(() => requestAnimationFrame(() => scrollToHash(id)));
+    });
+  }, true);
+
+  // kalau buka link langsung pakai #faq
+  window.addEventListener("load", () => {
+    if (location.hash && document.querySelector(location.hash)) {
+      setTimeout(() => scrollToHash(location.hash), 60);
+    }
+  }, { passive:true });
 })();
 </script>
 </body>
