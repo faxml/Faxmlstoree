@@ -1138,94 +1138,23 @@ main.container{ padding-bottom: 90px; }
   .loading-spinner,
   .btn .btn-spin{ animation:none !important; }
 }
+/* ===== SMOOTH PATCH V2 (anti bentrok + lebih ringan di mobile) ===== */
 
-/* ===== RAPihin GRID PRODUK di MOBILE ===== */
-@media (max-width: 640px){
+/* jangan pakai CSS smooth (biar JS yang handle) */
+html{ scroll-behavior: auto !important; }
 
-  /* 1) Grid 2 kolom rapih */
-  .products-grid, .grid-products, #productsGrid{
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 14px !important;
-    align-items: stretch !important;
-  }
+/* lighten animasi berat di mobile */
+@media (max-width: 768px){
+  /* matikan gerak yang bikin stutter */
+  .fx-p{ animation: none !important; }
+  .app-float{ animation: none !important; }
 
-  /* 2) Card dibuat flex kolom biar tombol bisa “nempel bawah” */
-  .product-card, .card, .product{
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-  }
+  /* blur filter overlay juga berat */
+  .fx-overlay::before{ filter: none !important; opacity: .85; }
 
-  /* 3) Thumbnail gambar konsisten (biar tinggi gambar sama) */
-  .product-thumb, .thumb, .cover{
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    border-radius: 16px;
-  }
-  .product-thumb img, .thumb img, .cover img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-@media (max-width: 640px){
-
-  /* gambar (punyamu sekarang cuma display:block, tambah ini biar aman) */
-  .product-thumb img, .thumb img, .cover img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Judul: batasi 2 baris (tanpa webkit) */
-  #productsGrid h3,
-  .products-grid h3,
-  .grid-products h3,
-  .product-grid h3{
-    line-height: 1.25;
-    max-height: calc(1.25em * 2); /* 2 baris */
-    overflow: hidden;
-  }
-
-  /* Deskripsi: batasi 3 baris (tanpa webkit) */
-  #productsGrid p,
-  .products-grid p,
-  .grid-products p,
-  .product-grid p{
-    line-height: 1.35;
-    max-height: calc(1.35em * 3); /* 3 baris */
-    overflow: hidden;
-  }
+  /* sedikit ringankan shadow */
+  .glass{ box-shadow: 0 12px 34px rgba(0,0,0,.38) !important; }
 }
-
-
-
-  /* 5) Dorong bagian aksi (harga/detail/beli) ke bawah */
-  .product-bottom, .actions, .card-actions{
-    margin-top: auto !important;
-  }
-
-  /* 6) Tombol beli full lebar biar konsisten */
-  .buy-btn, .btn-buy, .primary{
-    width: 100% !important;
-  }
-
-  /* 7) Kasih ruang bawah supaya tidak ketiban tombol WA */
-  .products-wrap, .products, main{
-    padding-bottom: 92px !important;
-  }
-}
-
-/* ===== posisi tombol WA biar tidak nutup tombol beli ===== */
-.wa-float, .whatsapp-float, .waButton, .float-wa{
-  bottom: 18px !important;     /* naikin dikit */
-  right: 16px !important;
-}
-
 
 </style>
 </head>
@@ -2039,9 +1968,6 @@ function renderProducts(list) {
           </div>
           <a class="btn" href="#faq">Detail</a>
         </div>
-<div class="product-bottom">
-  <!-- harga + detail + tombol beli -->
-</div>
 
         ${
           ready
@@ -2572,42 +2498,107 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts(products);
   applySearch("");
 }, { passive:true });
-(function(){
-  function mark(){
-    const btns = Array.from(document.querySelectorAll("a,button"))
-      .filter(el => /beli sekarang/i.test(el.textContent || ""));
+/* ===== FINAL SMOOTH SCROLL V2 (lebih halus, sidebar tunggu nutup dulu) ===== */
+(() => {
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-    btns.forEach(btn => {
-      // cari card terdekat
-      const card = btn.closest(".product-card, .product, .card, article, li, div");
-      if(!card) return;
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    const h = nav ? nav.getBoundingClientRect().height : 0;
+    return Math.round(h + 18);
+  }
 
-      card.classList.add("p-card");
+  // rAF smooth scroll (lebih konsisten daripada native smooth di iOS)
+  let __raf = 0;
+  function animateScrollTo(toY, ms){
+    cancelAnimationFrame(__raf);
+    const startY = window.pageYOffset || 0;
+    const delta = toY - startY;
+    if (prefersReduce || Math.abs(delta) < 2){
+      window.scrollTo(0, toY);
+      return;
+    }
 
-      // wrapper grid (parent yang isinya banyak card)
-      const grid = card.parentElement;
-      if(grid && grid.children && grid.children.length >= 2){
-        grid.classList.add("p-grid");
-      }
+    const start = performance.now();
+    const dur = Math.max(280, Math.min(ms, 900));
 
-      // title & desc di dalam card
-      const title = card.querySelector(".product-title, .title, h3, h2, h4");
-      if(title) title.classList.add("p-title");
+    const ease = (t) => (t < 0.5)
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-      const desc  = card.querySelector(".product-desc, .desc, p");
-      if(desc) desc.classList.add("p-desc");
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / dur);
+      window.scrollTo(0, startY + delta * ease(p));
+      if (p < 1) __raf = requestAnimationFrame(step);
+    };
+    __raf = requestAnimationFrame(step);
+  }
 
-      // actions area (tempat tombol)
-      const actions = btn.closest(".product-bottom, .actions, .card-actions") || btn.parentElement;
-      if(actions) actions.classList.add("p-actions");
+  function flashTarget(el){
+    el.classList.remove("section-flash");
+    void el.offsetWidth;
+    el.classList.add("section-flash");
+    setTimeout(() => el.classList.remove("section-flash"), 850);
+  }
+
+  // tunggu sidebar benar-benar selesai animasi tutup
+  function closeMenuAfterTransition(cb){
+    const menu = document.getElementById("mobileMenu");
+    if (!menu || !menu.classList.contains("open")) return cb?.();
+
+    const done = () => {
+      menu.removeEventListener("transitionend", done);
+      cb?.();
+    };
+
+    // fallback kalau transitionend gak kepanggil
+    const fallback = setTimeout(done, 360);
+
+    menu.addEventListener("transitionend", () => {
+      clearTimeout(fallback);
+      done();
+    }, { once:true });
+
+    // panggil closeMenu yang sudah ada
+    if (typeof window.closeMenu === "function") window.closeMenu();
+  }
+
+  function goToHash(id){
+    const target = document.querySelector(id);
+    if (!target) return;
+
+    document.activeElement?.blur?.();
+
+    // hitung tujuan scroll
+    const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
+    const dist = Math.abs(y - (window.pageYOffset || 0));
+    const ms = 380 + Math.min(520, dist * 0.55); // durasi adaptif
+
+    // kalau sidebar lagi open -> tunggu nutup dulu biar gak “geser”
+    closeMenuAfterTransition(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          animateScrollTo(y, ms);
+          history.replaceState(null, "", id);
+          flashTarget(target);
+        });
+      });
     });
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    mark();
-    setTimeout(mark, 300);   // kalau produk render async
-    setTimeout(mark, 1000);
-  });
+  // ambil alih semua klik anchor #...
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    if (!document.querySelector(id)) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    goToHash(id);
+  }, true);
 })();
 </script>
 </body>
