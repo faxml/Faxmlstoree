@@ -2716,6 +2716,121 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, { passive:true });
 })();
+/* ===== ANDROID FIX: anchor scroll selalu sampai (auto-correct) ===== */
+(() => {
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    if (!nav) return 170;
+    const r = nav.getBoundingClientRect();
+    return Math.round(r.bottom + 12);
+  }
+
+  function anyOverlayOpen(){
+    return (
+      document.getElementById("buyModal")?.classList.contains("show") ||
+      document.getElementById("payModal")?.classList.contains("show") ||
+      document.getElementById("qrisView")?.classList.contains("show") ||
+      document.getElementById("mobileMenu")?.classList.contains("open")
+    );
+  }
+
+  function forceUnlockIfSafe(){
+    const isFixed = getComputedStyle(document.body).position === "fixed";
+    if (isFixed && !anyOverlayOpen() && typeof window.unlockScroll === "function") {
+      window.unlockScroll();
+    }
+  }
+
+  function desiredY(el){
+    return Math.round(window.pageYOffset + el.getBoundingClientRect().top - navOffset());
+  }
+
+  function scrollToEl(el){
+    forceUnlockIfSafe();
+    const y = desiredY(el);
+    if (prefersReduce) window.scrollTo(0, y);
+    else window.scrollTo({ top: y, behavior: "smooth" });
+    return y;
+  }
+
+  // koreksi berkali-kali (khusus Android address bar)
+  function settleToEl(el){
+    let tries = 0;
+    const MAX = isAndroid ? 10 : 6;
+
+    const tick = () => {
+      tries++;
+      forceUnlockIfSafe();
+
+      const y = desiredY(el);
+      const cur = Math.round(window.pageYOffset || 0);
+      const diff = y - cur;
+
+      if (Math.abs(diff) <= 3 || tries >= MAX) return;
+
+      // paksa koreksi ke posisi terbaru
+      if (prefersReduce) window.scrollTo(0, y);
+      else window.scrollTo({ top: y, behavior: "smooth" });
+
+      setTimeout(tick, isAndroid ? 180 : 120);
+    };
+
+    setTimeout(tick, isAndroid ? 160 : 120);
+  }
+
+  function closeMenuThen(cb){
+    const menu = document.getElementById("mobileMenu");
+    if (!menu || !menu.classList.contains("open")) return cb();
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      menu.removeEventListener("transitionend", finish);
+      cb();
+    };
+
+    menu.addEventListener("transitionend", finish, { once:true });
+    setTimeout(finish, 420);
+
+    if (typeof window.closeMenu === "function") window.closeMenu();
+    else menu.classList.remove("open");
+  }
+
+  function goToHash(id){
+    const el = document.querySelector(id);
+    if (!el) return;
+
+    closeMenuThen(() => {
+      document.activeElement?.blur?.();
+      history.replaceState(null, "", id);
+
+      // 1) scroll awal
+      scrollToEl(el);
+
+      // 2) auto-correct sampai benar-benar nyampe
+      settleToEl(el);
+    });
+  }
+
+  // Ambil alih semua klik anchor #...
+  window.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    if (!document.querySelector(id)) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    goToHash(id);
+  }, true);
+
+})();
 </script>
 </body>
 </html>
