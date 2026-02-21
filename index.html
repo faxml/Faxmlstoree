@@ -1413,6 +1413,12 @@ html{ scroll-behavior: auto !important; }
     margin-top: 6px;
   }
 }
+#detailModal .modal-footer{
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  pointer-events: auto;
+}
 </style>
 </head>
 
@@ -1851,8 +1857,7 @@ html{ scroll-behavior: auto !important; }
     <div class="modal-body" id="detailBody"></div>
 
     <div class="modal-footer">
-      <button type="button" class="btn" id="detailCloseBtn">Tutup</button>
-      <button type="button" class="btn primary" id="detailBuyBtn">Beli Sekarang</button>
+     <button id="detailCloseBtn" type="button" class="btn">Tutup</button>
     </div>
   </div>
 </div>
@@ -2316,6 +2321,7 @@ const detailBody  = qs("#detailBody");
 const closeDetail = qs("#closeDetail");
 const detailCloseBtn = qs("#detailCloseBtn");
 const detailBuyBtn = qs("#detailBuyBtn");
+console.log("detailBuyBtn:", detailBuyBtn);
 
 let detailProduct = null;
 
@@ -2352,7 +2358,6 @@ function openDetailModal(p){
       <li>Support untuk kendala umum sesuai jam layanan.</li>
     </ul>
   `;
-
   detailModal.classList.add("show");
   detailModal.setAttribute("aria-hidden","false");
   lockScroll();
@@ -2383,6 +2388,7 @@ detailBuyBtn?.addEventListener("click", () => {
     duration: detailProduct.duration
   });
 }, { passive:true });
+
 /* ========= Search ========= */
 const searchInput = qs("#searchInput");
 const searchClear = qs("#searchClear");
