@@ -858,7 +858,93 @@ section{ padding:18px 0 24px; }
 .f-social .ico{ width:28px; height:28px; border-radius:10px; overflow:hidden; display:grid; place-items:center; }
 .f-social .ico img{ width:100%; height:100%; object-fit: contain; display:block; }
 @media (max-width: 360px){ .f-social{ grid-template-columns: 1fr; } }
+/* ===== WA GROUP HARD FIX (anti SVG meledak) ===== */
+.f-social a.wa-group{
+  grid-column: 1 / -1;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px;
+  min-height: 54px;
+  border-radius: 16px;
 
+  border: 1px solid rgba(37,211,102,.28);
+  background:
+    radial-gradient(260px 140px at 0% 50%, rgba(37,211,102,.18), transparent 55%),
+    rgba(255,255,255,.04);
+}
+
+.f-social a.wa-group:hover{
+  border-color: rgba(37,211,102,.55);
+  background:
+    radial-gradient(260px 140px at 0% 50%, rgba(37,211,102,.24), transparent 55%),
+    rgba(255,255,255,.06);
+}
+
+/* kunci ukuran kotak ikon */
+.f-social a.wa-group .ico.wa{
+  width: 32px !important;
+  height: 32px !important;
+  flex: 0 0 32px !important;
+  display: grid !important;
+  place-items: center;
+  overflow: hidden;
+
+  border-radius: 12px;
+  background: #25D366;
+  color: #fff;
+}
+
+/* kunci ukuran SVG (meskipun ada rule svg global) */
+.f-social a.wa-group svg{
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  display: block !important;
+}
+
+/* text */
+.f-social a.wa-group .txt{
+  display: flex !important;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.f-social a.wa-group .wa-title{ font-weight: 900; line-height: 1.1; }
+.f-social a.wa-group .wa-sub{
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(255,255,255,.72);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* badge */
+.f-social a.wa-group .wa-pill{
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 12px;
+  color: #eafff4;
+  border: 1px solid rgba(37,211,102,.35);
+  background: rgba(37,211,102,.16);
+}
+/* WhatsApp icon like IG/TikTok card */
+.f-social .ico.wa{
+  background:#25D366;
+  color:#fff;
+}
+.f-social .ico.wa svg{
+  width:70% !important;
+  height:70% !important;
+  display:block;
+}
 /* SIDEBAR */
 #mobileMenu{
   position: fixed;
@@ -1419,6 +1505,242 @@ html{ scroll-behavior: auto !important; }
   z-index: 5;
   pointer-events: auto;
 }
+/* ===== FOOTER LAPTOP FIX (anti kepotong) ===== */
+@media (min-width: 981px){
+
+  /* bikin kolom Social Media lebih lebar */
+  #footer .footer-top{
+    grid-template-columns: 1.55fr 1fr 1fr 1.75fr !important;
+    gap: 22px !important;
+    align-items: start !important;
+  }
+
+  /* social: 2 kolom yang cukup lebar */
+  #footer .f-social{
+    grid-template-columns: repeat(2, minmax(180px, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  /* card social sama tinggi */
+  #footer .f-social a{
+    min-height: 52px !important;
+    padding: 12px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  /* INI KUNCI: matiin ellipsis yang bikin "Instagr..." */
+  #footer .f-social .txt{
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
+  }
+
+  /* jaga ikon konsisten */
+  #footer .f-social .ico{
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 12px !important;
+    flex: 0 0 30px !important;
+  }
+
+  /* kalau WA pakai SVG */
+  #footer .f-social .ico.wa svg{
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+  }
+  
+  /* kalau TG pakai SVG */
+  #footer .f-social .ico.tg svg{
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+  }
+  
+}
+.f-social .ico.tg{ background:#229ED9; color:#fff; }
+.f-social .ico.tg svg{ width:70%; height:70%; display:block; }
+/* ===== BERANDA FULL WIDTH (LAPTOP) ===== */
+@media (min-width: 1100px){
+  #beranda .hero-grid{
+    grid-template-columns: 1fr !important;
+  }
+  #beranda .showcase{
+    max-width: 820px;
+  }
+  #beranda .hero-card{
+    padding: 36px;
+  }
+  #beranda .sub{
+    max-width: 90ch;
+  }
+}
+  /* ===== RAPIIIN HERO (LAPTOP/DESKTOP) ===== */
+@media (min-width: 980px){
+
+  /* kurangi tinggi hero biar ga kebanyakan kosong */
+  #beranda.hero{ padding: 46px 0 18px !important; }
+
+  /* hapus min-height lama di H1 (ini biang ruang kosong) */
+  #beranda .hero-card h1{ min-height: unset !important; }
+
+  /* rapihin padding card */
+  #beranda .hero-card{
+    padding: 30px 34px !important;
+    border-radius: 28px !important;
+  }
+
+  /* rapihin jarak elemen */
+  #beranda .kicker{ margin-bottom: 10px !important; }
+  #beranda h1{ margin: 10px 0 10px !important; }
+  #beranda .sub{ margin: 0 0 16px !important; }
+
+  /* tombol CTA biar sejajar & ga turun */
+  #beranda .hero-actions{
+    margin-top: 0 !important;
+    gap: 10px !important;
+  }
+  #beranda .hero-actions .btn{
+    height: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+  }
+
+  /* ikon app-float rapihin posisi (ga ganggu layout) */
+  #beranda .app-float-wrap{
+    top: 78px !important;
+    right: 18px !important;
+    opacity: .75 !important;
+  }
+}
+
+/* ===== RAPIIIN SECTION HEAD PRODUK (biar tombol kanan sejajar) ===== */
+@media (min-width: 980px){
+  #produk .section-head{
+    align-items: center !important;
+    margin-bottom: 14px !important;
+  }
+  #produk .section-head .btn{
+    height: 40px;
+    padding: 10px 14px;
+  }
+}
+/* ===== RAPIIIN MOBILE (<= 640px) ===== */
+@media (max-width: 640px){
+
+  /* hero spacing */
+  #beranda.hero{ padding: 34px 0 18px !important; }
+
+  /* card hero lebih padat & rapi */
+  #beranda .hero-card{
+    padding: 18px 16px !important;
+    border-radius: 22px !important;
+  }
+
+  /* hapus min-height judul biar gak ada ruang kosong */
+  #beranda .hero-card h1{ min-height: unset !important; }
+
+  /* teks */
+  #beranda h1{
+    font-size: 30px !important;
+    line-height: 1.12 !important;
+    margin: 10px 0 8px !important;
+    letter-spacing: -.5px;
+  }
+  #beranda .sub{
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin: 0 0 14px !important;
+  }
+
+  /* tombol CTA jadi 2 kolom */
+  #beranda .hero-actions{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px !important;
+    margin-top: 0 !important;
+  }
+  #beranda .hero-actions .btn{
+    width: 100%;
+    height: 42px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* app float jangan ganggu teks */
+  #beranda .app-float-wrap{
+    top: 92px !important;
+    right: 10px !important;
+    width: 120px !important;
+    height: 110px !important;
+    opacity: .7 !important;
+  }
+  #beranda .app-float{ width: 20px !important; height: 20px !important; border-radius: 8px !important; }
+
+  /* showcase rapihin */
+  #beranda .showcase{
+    padding: 14px !important;
+    border-radius: 22px !important;
+    gap: 10px !important;
+  }
+  #beranda .mini{
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+}
+
+/* ===== RAPIIIN PRODUK MOBILE (<= 720px) ===== */
+@media (max-width: 720px){
+
+  /* header section biar tombol kanan gak “ngambang” */
+  .section-head{
+    align-items: center !important;
+    gap: 10px !important;
+  }
+  .section-head h2{ font-size: 18px !important; }
+  .section-head .btn{ height: 38px; padding: 9px 12px; }
+
+  /* grid produk 2 kolom stabil */
+  .grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  /* card lebih konsisten */
+  .card{
+    padding: 12px !important;
+    border-radius: 16px !important;
+  }
+  .product-thumb{
+    height: 120px !important;
+    border-radius: 14px !important;
+  }
+  .thumb-brand{ font-size: 13px !important; }
+
+  /* judul & deskripsi biar gak kepanjangan */
+  .card h3{
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+    max-height: calc(1.25em * 2) !important;
+    overflow: hidden !important;
+  }
+  .card p{
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+    max-height: calc(1.55em * 3) !important;
+    overflow: hidden !important;
+  }
+
+  /* tombol beli */
+  .btn-buy{ height: 38px !important; border-radius: 12px !important; }
+}
+
+/* extra kecil: 1 kolom (opsional) */
+@media (max-width: 360px){
+  .grid{ grid-template-columns: 1fr !important; }
+}
 </style>
 </head>
 
@@ -1480,7 +1802,7 @@ html{ scroll-behavior: auto !important; }
     <section class="hero" id="beranda">
       <div class="hero-grid">
         <div class="hero-card glass">
-          <div class="kicker"><span class="dot"></span> Marketplace Aplikasi Premium • Murah & Garansi</div>
+          <div class="kicker"><span class="dot"></span> Marketplace App Premium • Murah & Garansi</div>
 
           <div class="app-float-wrap" aria-hidden="true">
             <span class="app-float a1"><img src="img/logonet.png" alt=""></span>
@@ -1498,24 +1820,10 @@ html{ scroll-behavior: auto !important; }
           </h1>
 
           <p class="sub">Pilih produk → isi format → lanjut pembayaran QRIS → konfirmasi sudah bayar → kirim → WhatsApp admin.</p>
+</div>
         </div>
-
-        <aside class="showcase glass" aria-label="Highlight">
-          <div class="badge">✨ Premium Picks</div>
-          <div class="mini">
-            <h3>Streaming & Hiburan</h3>
-            <p>Netflix / YouTube Premium</p>
-          </div>
-          <div class="mini">
-            <h3>Editing & Kreatif</h3>
-            <p>CapCut / Alight Motion</p>
-          </div>
-          <div class="mini">
-            <h3>Desain & Produktivitas</h3>
-            <p>Canva / Spotify</p>
-          </div>
-        </aside>
-      </div>
+        
+      </div>  
     </section>
 
     <!-- PRODUK -->
@@ -1646,6 +1954,22 @@ html{ scroll-behavior: auto !important; }
               <span class="ico"><img src="img/tiktok.jpg" alt="TikTok"></span>
               <span class="txt">TikTok</span>
             </a>
+            <a class="wa-link" href="https://chat.whatsapp.com/JBSlNH5rB2kG6Kjik1xNpc?mode=gi_t" target="_blank" rel="noopener">
+  <span class="ico wa" aria-hidden="true">
+    <svg viewBox="0 0 448 512" aria-hidden="true">
+      <path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-67.1-156.9zM224 438.7c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3 18.6-68.2-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-82.8 184.6-184.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7 .9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.7z"/>
+    </svg>
+  </span>
+  <span class="txt">Info App Prem</span>
+</a>
+<a class="tg-link" href="https://t.me/faxmlpreset" target="_blank" rel="noopener">
+  <span class="ico tg" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <path fill="currentColor" d="M21.9 4.6c.3-1.3-1.1-2.4-2.3-1.9L2.9 9.1c-1.2.5-1.2 2.2.1 2.6l4.6 1.5 1.8 5.6c.4 1.2 2 1.4 2.7.4l2.6-3.5 4.9 3.6c1 .7 2.4.2 2.6-1L21.9 4.6zM9 12.7l9.6-6.1-7.7 7.3-.3 3.3-1.5-4.7L5.9 11l16.2-6.1L9 12.7z"/>
+    </svg>
+  </span>
+  <span class="txt">Telegram</span>
+</a>
           </div>
         </div>
       </div>
@@ -2179,7 +2503,7 @@ const products = [
   { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi 28 Hari", duration:"28 Hari", price:20000, stock:20, tag:"Original", img:"img/capcut.jpg" },
   { brand:"capcut",  label:"CAPCUT",  name:"CapCut Premium Private Garansi Full", duration:"35 Hari", price:23000, stock:20, tag:"Original", img:"img/capcut.jpg" },
 
-  { brand:"chatgpt", label:"CHATGPT", name:"ChatGPT Premium Private", duration:"1 Bulan", price:18000, stock:20, tag:"Populer", img:"img/chatgpt.png" },
+  { brand:"chatgpt", label:"CHATGPT", name:"ChatGPT Premium Private", duration:"1 Bulan", price:15000, stock:20, tag:"Populer", img:"img/chatgpt.png" },
   { brand:"gemini",  label:"GEMINI",  name:"GEMINI PRO + GDRIVE 2TB + Veo3", duration:"1 Bulan", price:10000, stock:20, tag:"Populer", img:"img/gemini.png" },
 
   { brand:"canva",   label:"CANVA",   name:"Canva Premium Team", duration:"1 Bulan", price:6000,  stock:50, tag:"Team", img:"img/canva.png" },
