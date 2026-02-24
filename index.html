@@ -1741,6 +1741,17 @@ html{ scroll-behavior: auto !important; }
 @media (max-width: 360px){
   .grid{ grid-template-columns: 1fr !important; }
 }
+/* ===== ANTI JITTER: lock tinggi judul hero saat typing ===== */
+#beranda .hero-card h1{
+  min-height: 2.25em !important; /* kira-kira 2 baris (tapi ga kegedean) */
+}
+
+/* kalau layar lebar banget dan pasti 1 baris, kecilin sedikit */
+@media (min-width: 1100px){
+  #beranda .hero-card h1{
+    min-height: 1.25em !important;
+  }
+}
 </style>
 </head>
 
@@ -1814,15 +1825,11 @@ html{ scroll-behavior: auto !important; }
             <span class="app-float a7"><img src="img/logoam.png" alt=""></span>
             <span class="app-float a8"><img src="img/logonet.png" alt=""></span>
           </div>
-
           <h1>
             <span id="typeTarget"></span><span class="type-cursor" aria-hidden="true">|</span>
           </h1>
-
           <p class="sub">Pilih produk → isi format → lanjut pembayaran QRIS → konfirmasi sudah bayar → kirim → WhatsApp admin.</p>
-</div>
         </div>
-        
       </div>  
     </section>
 
@@ -2296,7 +2303,12 @@ const todayISO = () => {
 /* ========= iOS/Android SCROLL LOCK (no jitter) =========
    pakai position:fixed biar gak “loncat” / “geser sendiri” */
 let __lockY = 0;
+let __isLocked = false;
+
 function lockScroll(){
+  if (__isLocked) return;
+  __isLocked = true;
+
   __lockY = window.scrollY || window.pageYOffset || 0;
   document.body.style.position = "fixed";
   document.body.style.top = `-${__lockY}px`;
@@ -2304,7 +2316,11 @@ function lockScroll(){
   document.body.style.right = "0";
   document.body.style.width = "100%";
 }
+
 function unlockScroll(){
+  if (!__isLocked) return;
+  __isLocked = false;
+
   document.body.style.position = "";
   document.body.style.top = "";
   document.body.style.left = "";
@@ -2312,7 +2328,6 @@ function unlockScroll(){
   document.body.style.width = "";
   window.scrollTo(0, __lockY);
 }
-
 /* ========= typing effect (LOOP: ketik berulang) ========= */
 (function typingLoop(){
   const el = document.querySelector("#typeTarget");
@@ -2438,46 +2453,6 @@ menuOverlay?.addEventListener("click", closeMenu);
 mobileClose?.addEventListener("click", closeMenu);
 mobileMenu?.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", closeMenu));
 
-/* ========= Smooth scroll with offset (tanpa loncat) ========= */
-(() => {
-  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-
-function navOffset(){
-  const nav = document.getElementById("topNav");
-  if (!nav) return 170;
-  // r.bottom sudah termasuk posisi sticky top + safe area, jadi offset lebih akurat di iPhone
-  const r = nav.getBoundingClientRect();
-  return Math.round(r.bottom + 12);
-}
-
-  function smoothTo(el){
-    const y = window.pageYOffset + el.getBoundingClientRect().top - navOffset();
-    if (prefersReduce) return window.scrollTo(0, y);
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
-
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-
-    const target = document.querySelector(id);
-    if (!target) return;
-
-    e.preventDefault();
-
-    if (mobileMenu?.classList.contains("open")){
-      closeMenu();
-      setTimeout(() => smoothTo(target), 80);
-    }else{
-      smoothTo(target);
-    }
-
-    history.replaceState(null, "", id);
-  }, { passive:false });
-})();
 
 /* ========= ESC close ========= */
 document.addEventListener("keydown", (e) => {
@@ -3227,200 +3202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts(products);
   applySearch("");
 }, { passive:true });
-/* ===== FINAL SMOOTH SCROLL V2 (lebih halus, sidebar tunggu nutup dulu) ===== */
-(() => {
-  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
-  function navOffset(){
-    const nav = document.getElementById("topNav");
-    const h = nav ? nav.getBoundingClientRect().height : 0;
-    return Math.round(h + 18);
-  }
-
-  // rAF smooth scroll (lebih konsisten daripada native smooth di iOS)
-  let __raf = 0;
-  function animateScrollTo(toY, ms){
-    cancelAnimationFrame(__raf);
-    const startY = window.pageYOffset || 0;
-    const delta = toY - startY;
-    if (prefersReduce || Math.abs(delta) < 2){
-      window.scrollTo(0, toY);
-      return;
-    }
-
-    const start = performance.now();
-    const dur = Math.max(280, Math.min(ms, 900));
-
-    const ease = (t) => (t < 0.5)
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const step = (now) => {
-      const p = Math.min(1, (now - start) / dur);
-      window.scrollTo(0, startY + delta * ease(p));
-      if (p < 1) __raf = requestAnimationFrame(step);
-    };
-    __raf = requestAnimationFrame(step);
-  }
-
-  function flashTarget(el){
-    el.classList.remove("section-flash");
-    void el.offsetWidth;
-    el.classList.add("section-flash");
-    setTimeout(() => el.classList.remove("section-flash"), 850);
-  }
-
-  // tunggu sidebar benar-benar selesai animasi tutup
-  function closeMenuAfterTransition(cb){
-    const menu = document.getElementById("mobileMenu");
-    if (!menu || !menu.classList.contains("open")) return cb?.();
-
-    const done = () => {
-      menu.removeEventListener("transitionend", done);
-      cb?.();
-    };
-
-    // fallback kalau transitionend gak kepanggil
-    const fallback = setTimeout(done, 360);
-
-    menu.addEventListener("transitionend", () => {
-      clearTimeout(fallback);
-      done();
-    }, { once:true });
-
-    // panggil closeMenu yang sudah ada
-    if (typeof window.closeMenu === "function") window.closeMenu();
-  }
-
-  function goToHash(id){
-    const target = document.querySelector(id);
-    if (!target) return;
-
-    document.activeElement?.blur?.();
-
-    // hitung tujuan scroll
-    const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
-    const dist = Math.abs(y - (window.pageYOffset || 0));
-    const ms = 380 + Math.min(520, dist * 0.55); // durasi adaptif
-
-    // kalau sidebar lagi open -> tunggu nutup dulu biar gak “geser”
-    closeMenuAfterTransition(() => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          animateScrollTo(y, ms);
-          history.replaceState(null, "", id);
-          flashTarget(target);
-        });
-      });
-    });
-  }
-
-  // ambil alih semua klik anchor #...
-  document.addEventListener("click", (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    if (!document.querySelector(id)) return;
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    goToHash(id);
-  }, true);
-})();
-/* ===== FORCE NAVIGATION FIX (FAQ pasti kebuka) ===== */
-(() => {
-  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-
-  function navOffset(){
-    const nav = document.getElementById("topNav");
-    if (!nav) return 170;
-    const r = nav.getBoundingClientRect();
-    return Math.round(r.bottom + 12); // lebih akurat di iPhone
-  }
-
-  function anyOverlayOpen(){
-    return (
-      document.getElementById("buyModal")?.classList.contains("show") ||
-      document.getElementById("payModal")?.classList.contains("show") ||
-      document.getElementById("qrisView")?.classList.contains("show") ||
-      document.getElementById("mobileMenu")?.classList.contains("open")
-    );
-  }
-
-  function forceUnlockIfSafe(){
-    const isFixed = getComputedStyle(document.body).position === "fixed";
-    if (isFixed && !anyOverlayOpen() && typeof window.unlockScroll === "function") {
-      window.unlockScroll();
-    }
-  }
-
-  function scrollToHash(id){
-    const target = document.querySelector(id);
-    if (!target) return;
-
-    forceUnlockIfSafe();
-
-    const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
-    const opt = prefersReduce ? { top:y } : { top:y, behavior:"smooth" };
-    window.scrollTo(opt);
-
-    // iOS kadang perlu 2x supaya bener-bener nyampe
-    setTimeout(() => {
-      forceUnlockIfSafe();
-      const y2 = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
-      const opt2 = prefersReduce ? { top:y2 } : { top:y2, behavior:"smooth" };
-      window.scrollTo(opt2);
-    }, 140);
-  }
-
-  function closeMenuThen(cb){
-    const menu = document.getElementById("mobileMenu");
-    if (!menu || !menu.classList.contains("open")) return cb();
-
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
-      menu.removeEventListener("transitionend", finish);
-      cb();
-    };
-
-    menu.addEventListener("transitionend", finish);
-    setTimeout(finish, 420);
-
-    // pakai fungsi yang sudah ada
-    if (typeof window.closeMenu === "function") window.closeMenu();
-    else menu.classList.remove("open");
-  }
-
-  // Tangkap semua klik anchor #... dan PAKSA scroll
-  window.addEventListener("click", (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-
-    const id = a.getAttribute("href");
-    if (!id || id === "#") return;
-    if (!document.querySelector(id)) return;
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    closeMenuThen(() => {
-      // update URL tanpa bikin jump
-      history.replaceState(null, "", id);
-      requestAnimationFrame(() => requestAnimationFrame(() => scrollToHash(id)));
-    });
-  }, true);
-
-  // kalau buka link langsung pakai #faq
-  window.addEventListener("load", () => {
-    if (location.hash && document.querySelector(location.hash)) {
-      setTimeout(() => scrollToHash(location.hash), 60);
-    }
-  }, { passive:true });
-})();
 /* ===== ANDROID FIX: anchor scroll selalu sampai (auto-correct) ===== */
 (() => {
   const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -3535,6 +3317,119 @@ document.addEventListener("DOMContentLoaded", () => {
     goToHash(id);
   }, true);
 
+})();
+/* ===== ONE SMOOTH SCROLL (NO JITTER) ===== */
+(() => {
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    if (!nav) return 160;
+    return Math.round(nav.getBoundingClientRect().height + 18);
+  }
+
+  function anyOverlayOpen(){
+    return (
+      document.getElementById("buyModal")?.classList.contains("show") ||
+      document.getElementById("payModal")?.classList.contains("show") ||
+      document.getElementById("detailModal")?.classList.contains("show") ||
+      document.getElementById("qrisView")?.classList.contains("show") ||
+      document.getElementById("mobileMenu")?.classList.contains("open")
+    );
+  }
+
+  function unlockIfSafe(){
+    const isFixed = getComputedStyle(document.body).position === "fixed";
+    if (isFixed && !anyOverlayOpen() && typeof window.unlockScroll === "function") {
+      window.unlockScroll();
+    }
+  }
+
+  let raf = 0;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+  function animateTo(toY){
+    cancelAnimationFrame(raf);
+
+    const startY = window.pageYOffset || 0;
+    const delta = toY - startY;
+
+    if (prefersReduce || Math.abs(delta) < 2){
+      window.scrollTo(0, toY);
+      return;
+    }
+
+    const dur = Math.max(320, Math.min(900, Math.abs(delta) * 0.55));
+    const start = performance.now();
+
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / dur);
+      window.scrollTo(0, startY + delta * easeOutCubic(p));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+  }
+
+  function flash(el){
+    el.classList.remove("section-flash");
+    void el.offsetWidth;
+    el.classList.add("section-flash");
+    setTimeout(() => el.classList.remove("section-flash"), 850);
+  }
+
+  function closeMenuThen(cb){
+    const menu = document.getElementById("mobileMenu");
+    if (!menu || !menu.classList.contains("open")) return cb();
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      menu.removeEventListener("transitionend", finish);
+      cb();
+    };
+
+    menu.addEventListener("transitionend", finish, { once:true });
+    setTimeout(finish, 360);
+
+    if (typeof window.closeMenu === "function") window.closeMenu();
+    else menu.classList.remove("open");
+  }
+
+  function go(id){
+    const target = document.querySelector(id);
+    if (!target) return;
+
+    closeMenuThen(() => {
+      unlockIfSafe();
+
+      const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
+      requestAnimationFrame(() => requestAnimationFrame(() => animateTo(y)));
+
+      history.replaceState(null, "", id);
+      flash(target);
+    });
+  }
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+
+    const id = a.getAttribute("href");
+    if (!id || id === "#") return;
+    if (!document.querySelector(id)) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    go(id);
+  }, true);
+
+  window.addEventListener("load", () => {
+    if (location.hash && document.querySelector(location.hash)) {
+      setTimeout(() => go(location.hash), 60);
+    }
+  }, { passive:true });
 })();
 </script>
 </body>
