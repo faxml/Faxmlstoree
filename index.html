@@ -54,6 +54,16 @@ body{
   -webkit-overflow-scrolling: touch;
   touch-action: manipulation;
 }
+/* kurangi efek “bounce putih” saat overscroll */
+html, body{
+  overscroll-behavior-y: none;
+}
+
+/* iOS Safari: kadang root masih kebuka putih saat address bar anim */
+@supports (-webkit-touch-callout: none){
+  html{ height: -webkit-fill-available; }
+  body{ min-height: -webkit-fill-available; }
+}
 header, main{ position:relative; z-index:1; }
 @keyframes bgShift{
   0%{ background-position: 0% 0%, 100% 0%, 80% 100%, 0% 0%; }
@@ -2451,7 +2461,70 @@ hamburger?.addEventListener("click", () => {
 });
 menuOverlay?.addEventListener("click", closeMenu);
 mobileClose?.addEventListener("click", closeMenu);
-mobileMenu?.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", closeMenu));
+/* ===== SMOOTH NAV MOBILE (tutup sidebar dulu baru scroll) ===== */
+(() => {
+  const menu = document.getElementById("mobileMenu");
+  if (!menu) return;
+
+  const prefersReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  function navOffset(){
+    const nav = document.getElementById("topNav");
+    if (!nav) return 160;
+    return Math.round(nav.getBoundingClientRect().height + 18);
+  }
+
+  function smoothTo(target){
+    const y = window.pageYOffset + target.getBoundingClientRect().top - navOffset();
+    if (prefersReduce) window.scrollTo(0, y);
+    else window.scrollTo({ top: y, behavior: "smooth" });
+  }
+
+  function closeMenuThen(cb){
+    if (!menu.classList.contains("open")) return cb?.();
+
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      menu.removeEventListener("transitionend", finish);
+      cb?.();
+    };
+
+    menu.addEventListener("transitionend", finish, { once:true });
+    setTimeout(finish, 380); // fallback kalau transitionend gak kepanggil
+
+    // pakai closeMenu kamu yang sudah ada
+    if (typeof closeMenu === "function") closeMenu();
+  }
+
+  // link yang ada di sidebar (mobile-links + tombol Lihat Produk)
+  const links = menu.querySelectorAll('.mobile-links a[href^="#"], .mobile-actions a[href^="#"]');
+
+  links.forEach(a => {
+    a.addEventListener("click", (e) => {
+      const id = a.getAttribute("href");
+      if (!id || id === "#") return;
+
+      const target = document.querySelector(id);
+      if (!target) return;
+
+      e.preventDefault();
+
+      closeMenuThen(() => {
+        // tunggu unlockScroll selesai restore posisi
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            smoothTo(target);
+            history.replaceState(null, "", id);
+            // kalau kamu punya active nav helper:
+            window.__setActiveNav?.(id);
+          });
+        });
+      });
+    }, { passive:false });
+  });
+})();
 
 
 /* ========= ESC close ========= */
