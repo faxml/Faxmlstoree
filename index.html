@@ -595,6 +595,9 @@
       margin-left: 6px;
       opacity: .9;
       animation: blink .8s steps(1) infinite;
+      will-change: opacity;
+      transform: translateZ(0);
+      /* Hardware acceleration */
     }
 
     @keyframes blink {
@@ -2057,6 +2060,26 @@
       }
 
       /* mobile: no drift (lebih smooth) */
+
+      /* Optimize Electric & Typing together */
+      #electricWrap.on .card {
+        animation: cardElecGlowMobile 4s ease-in-out infinite !important;
+        box-shadow: 0 0 15px rgba(0, 234, 255, 0.4) !important;
+        will-change: border-color;
+        transform: translateZ(0);
+      }
+
+      @keyframes cardElecGlowMobile {
+
+        0%,
+        100% {
+          border-color: rgba(0, 234, 255, 0.4);
+        }
+
+        50% {
+          border-color: rgba(0, 234, 255, 0.9);
+        }
+      }
     }
 
     /* Reduce motion */
@@ -2087,6 +2110,8 @@
         0 18px 52px rgba(0, 0, 0, .42);
       animation: cardElecGlow 3s ease-in-out infinite;
       transition: box-shadow .4s ease, border-color .4s ease;
+      will-change: box-shadow, border-color, transform;
+      transform: translate3d(0, 0, 0);
     }
 
     #electricWrap.on .card:nth-child(2) {
